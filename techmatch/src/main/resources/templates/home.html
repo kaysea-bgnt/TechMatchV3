@@ -12,12 +12,17 @@
 <body>
     <header class="header">
         <div class="logo">TechMatch</div>
+        <h3>Welcome, <span th:text="${username}"></span>!</h3>
+        <h3>Welcome, <span th:text="${email}"></span>!</h3>
         <div class="search-bar">
             <input type="text" placeholder="Search..." class="form-control">
         </div>
         <div class="nav-items">
             <button class="btn btn-secondary" onclick="location.href='/popup'">All Events</button>
             <button class="btn btn-warning" onclick="location.href='/create'">+ Create Event</button>
+            <form action="/logout" method="post">
+                <button type="submit" class="btn btn-warning">Logout</button>
+            </form>
         </div>
     </header>
 

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechMatch Login Page</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Left Panel -->
+    <div class="left-panel">
+      <h1>Discover Events <span>That Match Your Passion</span></h1>
+      <p>
+        Stay informed and never miss an opportunity to learn, connect, and grow with
+        <b>TechMatch</b>, the event recommender system designed for the CCIS community.
+      </p>
+      <div class="buttons">
+        <button class="login-btn">Login</button>
+        <button class="signup-btn" onclick="location.href='/signup'">Sign Up</button>
+      </div>
+    </div>
+    <!-- Right Panel -->
+    <div class="right-panel">
+    <img src="/logo.png" alt="TechMatch Logo">
+      <h2>TechMatch</h2>
+        <form action="/login" method="post">
+          <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+          <div class="mb-3">
+              <label for="usernameOrEmail" class="form-label">Username or Email</label>
+              <input type="text" class="form-control" id="usernameOrEmail" name="usernameOrEmail" required>
+          </div>
+          <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Login</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+body {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #1f1f1f;
+    color: #ffffff;
+}
+
+.header .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.header .nav-items button {
+    margin-left: 1rem;
+}
+
+.card {
+    background-color: #1f1f1f;
+    color: #ffffff;
+    border: 1px solid #444;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card img {
+    max-height: 200px;
+    object-fit: cover;
+}
+
+.card .card-body {
+    padding: 1rem;
+}
+
+.modal-body h5, .modal-body p {
+    margin-bottom: 1rem;
+}

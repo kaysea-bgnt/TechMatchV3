@@ -5,10 +5,13 @@ import appdev.com.techmatch.model.Topic;
 import appdev.com.techmatch.service.EventService;
 import appdev.com.techmatch.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
 import appdev.com.techmatch.repository.TopicRepository;
 
 import java.io.IOException;
@@ -62,10 +65,14 @@ public class EventController {
         return "redirect:/home";
     }
 
-    @GetMapping("/events/{id}")
-    @ResponseBody
-    public Map<String, Object> getEventDetails(@PathVariable String id) {
+@GetMapping("/{id}") // Change from /events/{id} to simply /{id}
+@ResponseBody
+public Map<String, Object> getEventDetails(@PathVariable String id) {
     Event event = eventService.getEventById(id);
+
+    if (event == null) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
+    }
 
     Map<String, Object> response = new HashMap<>();
     response.put("eventName", event.getEventName());
@@ -73,15 +80,12 @@ public class EventController {
     response.put("location", event.getLocation());
     response.put("startDate", event.getStartDate());
     response.put("endDate", event.getEndDate());
-
-    if (event.getEventImage() != null) {
-        response.put("base64Image", Base64.getEncoder().encodeToString(event.getEventImage()));
-    } else {
-        response.put("base64Image", null);
-    }
+    response.put("eventType", event.getEventType());
+    response.put("topics", event.getTopics().stream().map(Topic::getName).toList());
 
     return response;
 }
+
     
 
     @GetMapping("/create")

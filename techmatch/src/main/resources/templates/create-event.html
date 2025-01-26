@@ -4,76 +4,210 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create Event</title>
+  <!-- Include Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/create-event.css">
+  <style>
+    body {
+      background-color: #121212; /* Dark background */
+      color: #f5f5f5; /* Light text for contrast */
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+      color: #ffd700; /* Gold color for heading */
+    }
+
+    form {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #1f1f1f; /* Slightly lighter than background */
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    label {
+      font-weight: bold;
+      color: #ffd700; /* Gold color for labels */
+    }
+
+    input, select, textarea {
+      background-color: #2a2a2a;
+      color: #f5f5f5;
+      border: 1px solid #444;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 15px;
+      width: 100%;
+    }
+
+    input[type="checkbox"] {
+      width: auto;
+      margin-right: 10px;
+    }
+
+    button {
+      background-color: #ffd700;
+      color: #121212;
+      font-weight: bold;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #e6c200; /* Slightly darker gold */
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .checkbox-group input {
+      margin: 0;
+    }
+
+    .checkbox-group label {
+      margin-right: 10px;
+    }
+  </style>
 </head>
 <body>
   <h1>Create an Event</h1>
   <form action="/events/create" method="post" enctype="multipart/form-data">
     <input type="hidden" name="userID" value="USER-000001"> <!-- Temporary for testing -->
 
-    <!-- Event Name -->
-    <label for="eventName">Event Name:</label>
-    <input type="text" id="eventName" name="eventName" required><br>
+    <div class="form-group">
+      <label for="eventName">Event Name:</label>
+      <input type="text" id="eventName" name="eventName" placeholder="Enter event name" required>
+    </div>
 
-    <!-- Event Image -->
-    <label for="imageFile">Event Image:</label>
-    <input type="file" id="imageFile" name="imageFile"><br>
+    <div class="form-group">
+      <label for="imageFile">Event Image:</label>
+      <input type="file" id="imageFile" name="imageFile">
+    </div>
 
-    <!-- Description -->
-    <label for="description">Description:</label>
-    <textarea id="description" name="description" required></textarea><br>
+    <div class="form-group">
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" rows="4" placeholder="Describe your event" required></textarea>
+    </div>
 
-    <!-- Location -->
-    <label for="location">Location:</label>
-    <input type="text" id="location" name="location" required><br>
+    <div class="form-group">
+      <label for="location">Location:</label>
+      <input type="text" id="location" name="location" placeholder="Enter event location" required>
+    </div>
 
-    <!-- Event Type Dropdown -->
-    <label for="eventType">Event Type:</label>
-    <select id="eventType" name="eventType" required>
-      <option value="Conference">Conference</option>
-      <option value="Workshop">Workshop</option>
-      <option value="Seminar">Seminar</option>
-      <option value="Webinar">Webinar</option>
-      <option value="Hackathon">Hackathon</option>
-    </select><br>
+    <div class="form-group">
+      <label for="eventType">Event Type:</label>
+      <select id="eventType" name="eventType" required>
+        <option value="Hackathon">Hackathon</option>
+        <option value="Networking">Networking</option>
+        <option value="Workshop">Workshop</option>
+        <option value="Seminar">Seminar</option>
+        <option value="Webinar">Webinar</option>
+        <option value="Study Session">Study Session</option>
+      </select>
+    </div>
 
-    <!-- Event Topics Checkboxes -->
-    <label for="eventTopics">Event Topics:</label><br>
-    <input type="checkbox" name="eventTopics" value="Technology"> Technology<br>
-    <input type="checkbox" name="eventTopics" value="Health"> Health<br>
-    <input type="checkbox" name="eventTopics" value="Education"> Education<br>
-    <input type="checkbox" name="eventTopics" value="Business"> Business<br>
-    <input type="checkbox" name="eventTopics" value="Entertainment"> Entertainment<br>
+    <div class="form-group">
+      <label for="eventTopics">Event Topics:</label>
+      <div class="checkbox-group">
+        <div>
+          <input type="checkbox" id="topic1" name="eventTopics" value="Academics">
+          <label for="topic1">Academics</label>
+        </div>
+        <div>
+          <input type="checkbox" id="topic2" name="eventTopics" value="Blockchain">
+          <label for="topic2">Blockchain</label>
+        </div>
+        <div>
+          <input type="checkbox" id="topic3" name="eventTopics" value="Cybersecurity">
+          <label for="topic3">Cybersecurity</label>
+        </div>
+        <div>
+          <input type="checkbox" id="topic4" name="eventTopics" value="Data Science">
+          <label for="topic4">Data Science</label>
+        </div>
+        <div>
+          <input type="checkbox" id="topic5" name="eventTopics" value="Artificial Intelligence">
+          <label for="topic5">Artificial Intelligence</label>
+        </div>
+        <div>
+          <input type="checkbox" id="topic6" name="eventTopics" value="Machine Learning">
+          <label for="topic6">Machine Learning</label>
+        </div>
+        <div>
+          <input type="checkbox" id="topic7" name="eventTopics" value="Cloud Computing">
+          <label for="topic7">Cloud Computing</label>
+        </div>
+        <div>
+          <input type="checkbox" id="topic8" name="eventTopics" value="Web Development">
+          <label for="topic8">Web Development</label>
+        </div>
+        <div>
+          <input type="checkbox" id="topic9" name="eventTopics" value="Application Development">
+          <label for="topic9">Application Development</label>
+        </div>
+        <div>
+          <input type="checkbox" id="topic10" name="eventTopics" value="Career and Professional Development">
+          <label for="topic10">Career and Professional Development</label>
+        </div>
+        <div>
+          <input type="checkbox" id="topic11" name="eventTopics" value="Other">
+          <label for="topic11">Other..</label>
+      </div>
+    </div>
+    <br>
 
-    <!-- Start Date -->
-    <label for="startDate">Start Date:</label>
-    <input type="date" id="startDate" name="startDate" required><br>
+    <div class="form-group">
+      <label for="startDate">Start Date:</label>
+      <input type="date" id="startDate" name="startDate" required>
+    </div>
 
-    <!-- End Date -->
-    <label for="endDate">End Date:</label>
-    <input type="date" id="endDate" name="endDate" required><br>
+    <div class="form-group">
+      <label for="endDate">End Date:</label>
+      <input type="date" id="endDate" name="endDate" required>
+    </div>
 
-    <!-- Start Time -->
-    <label for="startTime">Start Time:</label>
-    <input type="time" id="startTime" name="startTime" required><br>
+    <div class="form-group">
+      <label for="startTime">Start Time:</label>
+      <input type="time" id="startTime" name="startTime" required>
+    </div>
 
-    <!-- End Time -->
-    <label for="endTime">End Time:</label>
-    <input type="time" id="endTime" name="endTime" required><br>
+    <div class="form-group">
+      <label for="endTime">End Time:</label>
+      <input type="time" id="endTime" name="endTime" required>
+    </div>
 
-    <!-- Organization -->
-    <label for="organization">Organization:</label>
-    <input type="text" id="organization" name="organization" required><br>
+    <div class="form-group">
+      <label for="organization">Organization:</label>
+      <input type="text" id="organization" name="organization" placeholder="Organization name" required>
+    </div>
 
-    <!-- Tickets Free or Paid -->
-    <label for="isFree">Tickets Free?</label>
-    <select id="isFree" name="isFree">
-      <option value="true">Yes</option>
-      <option value="false">No</option>
-    </select><br>
+    <div class="form-group">
+      <label for="isFree">Tickets Free?</label>
+      <select id="isFree" name="isFree">
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+    </div>
 
-    <!-- Capacity -->
-    <label for="capacity">Capacity:</label>
-    <input type="number" id="capacity" name="capacity" required><br>
+    <div class="form-group">
+      <label for="capacity">Capacity:</label>
+      <input type="number" id="capacity" name="capacity" placeholder="Enter capacity" required>
+    </div>
 
     <button type="submit">Create Event</button>
   </form>

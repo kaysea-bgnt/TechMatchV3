@@ -1,40 +1,6 @@
 let currentEventID = null; // Store the current event ID
 let userID = 'USER-000001'; // Replace this with the logged-in user's ID from the session
 
-document.addEventListener('DOMContentLoaded', function () {
-    const modal = new bootstrap.Modal(document.getElementById('eventModal'));
-
-    // Open the modal and fetch event details
-    document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('click', function () {
-            currentEventID = this.getAttribute('data-event-id');
-
-            fetch(`/events/${currentEventID}`)
-                .then(response => response.json())
-                .then(event => {
-                    // Populate the modal with event details
-                    document.getElementById('eventName').textContent = event.eventName;
-                    document.getElementById('eventDate').textContent = `${event.startDate} to ${event.endDate}`;
-                    document.getElementById('eventDescription').textContent = event.description;
-                    document.getElementById('eventLocation').textContent = event.location;
-
-                    // Set event image or a placeholder
-                    if (event.base64Image) {
-                        document.getElementById('eventImage').src = `data:image/jpeg;base64,${event.base64Image}`;
-                    } else {
-                        document.getElementById('eventImage').src = '/path/to/default/image.jpg'; // Placeholder image
-                    }
-
-                    modal.show();
-                })
-                .catch(error => {
-                    console.error('Error fetching event details:', error);
-                    alert('Failed to load event details. Please try again later.');
-                });
-        });
-    });
-});
-
 // Register for the event
 function registerForEvent() {
     if (!currentEventID || !userID) {

@@ -21,7 +21,7 @@
         </div>
     </header>
 
-    <main class="container mt-5">
+    <main class="container mt-5">   
         <!-- Buttons for Event Topics -->
         <div class="mb-3 d-flex flex-wrap gap-2">
             <button class="btn btn-outline-light" onclick="filterByTopic('Academics')">Academics</button>
@@ -34,63 +34,19 @@
         <!-- Event Section -->
         <h1 class="text-center text-white">Events</h1>
 
-        <!-- Calendar and Filters -->
-        <div class="row">
-            <div class="col-md-9">
-                <div id="event-list" class="row row-cols-1 row-cols-md-3 g-4">
-                    <!-- Dynamic Event Cards Here -->
-                    <div th:each="event : ${events}" class="col">
-                        <div class="card h-100">
-                            <img th:src="'data:image/jpeg;base64,' + ${event.base64Image}" class="card-img-top" alt="Event Image">
-                            <div class="card-body">
-                                <h5 class="card-title" th:text="${event.eventName}"></h5>
-                                <p class="card-text" th:text="${event.description}"></p>
-                                <p class="card-text"><small class="text-muted" th:text="${event.location}"></small></p>
-                                <p class="card-text"><small class="text-muted" th:text="${event.startDate} + ' ' + ${event.startTime}"></small></p>
-                                <p class="card-text"><small class="text-muted" th:text="${event.endDate} + ' ' + ${event.endTime}"></small></p>
-                                <p class="card-text"><small class="text-muted" th:text="${event.eventType}"></small></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="eventModalLabel">Event Details</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <h5 id="eventName"></h5>
-                            <p><strong>Date:</strong> <span id="eventDate"></span></p>
-                            <p><strong>Description:</strong> <span id="eventDescription"></span></p>
-                            <p><strong>Location:</strong> <span id="eventLocation"></span></p>
-                            <img id="eventImage" class="img-fluid" alt="Event Image">
-                        </div>
-                        <div class="modal-footer">
-                            <button id="registerButton" class="btn btn-primary" onclick="registerForEvent()">Register</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-3">
-                <!-- Calendar Filter -->
-                <div class="card bg-dark text-white">
+        <div class="row row-cols-1 row-cols-md-3 g-4" id="event-list">
+            <!-- Dynamic Event Cards Here -->
+            <div th:each="event : ${events}" class="col">
+                <div class="card h-100" data-event-id="${event.eventID}">
+                    <img th:src="'data:image/jpeg;base64,' + ${event.base64Image}" class="card-img-top" alt="Event Image">
                     <div class="card-body">
-                        <h5>Filter by Date</h5>
-                        <input type="date" class="form-control mb-3" id="filterDate">
-                        <select class="form-select mb-3" id="filterEventType">
-                            <option value="">Event Type</option>
-                            <option value="Conference">Conference</option>
-                            <option value="Workshop">Workshop</option>
-                            <option value="Webinar">Webinar</option>
-                        </select>
-                        <button class="btn btn-warning w-100" onclick="applyFilters()">Apply Filters</button>
-                        <button class="btn btn-light w-100 mt-2" onclick="resetFilters()">Reset</button>
+                        <h5 class="card-title" th:text="${event.eventName}"></h5>
+                        <p class="card-text"><strong>Topic:</strong> 
+                            <span th:each="topic : ${event.topics}" th:text="${topic.name} + ', '"></span>
+                        </p>
+                        <p class="card-text"><strong>Type:</strong> <span th:text="${event.eventType}"></span></p>
+                        <p class="card-text"><strong>Date:</strong> <span th:text="${event.startDate} + ' to ' + ${event.endDate}"></span></p>
                     </div>
                 </div>
             </div>

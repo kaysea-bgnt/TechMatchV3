@@ -29,6 +29,10 @@
         <input type="text" name="username" placeholder="Username" required>
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>
+        <!-- Error message -->
+        <div th:if="${error}" style="color: red; margin-bottom: 10px;">
+          <p th:text="${error}"></p>
+        </div>
         <button type="submit">Sign Up</button>
       </form>
       <p class="terms">

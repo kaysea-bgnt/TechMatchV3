@@ -17,6 +17,7 @@ body {
   max-width: 900px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
+
 .left-panel {
   flex: 1;
   padding: 40px;
@@ -103,7 +104,7 @@ body {
   border-radius: 5px;
   font-size: 1rem;
 }
-.signup-form button {
+.login-form button {
   width: 100%;
   padding: 10px;
   font-size: 1rem;
@@ -113,6 +114,9 @@ body {
   color: white;
   cursor: pointer;
 }
+
+
+
 .terms {
   margin-top: 10px;
   font-size: 0.8rem;

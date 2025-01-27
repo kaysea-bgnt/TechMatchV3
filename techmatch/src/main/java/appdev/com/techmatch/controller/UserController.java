@@ -19,7 +19,7 @@ public class UserController {
 
 
     @PostMapping("/signup")
-public String signUp(@ModelAttribute User user, Model model) {
+    public String signUp(@ModelAttribute User user, Model model) {
     String email = user.getEmail().trim().toLowerCase();
 
     // Email domain validation

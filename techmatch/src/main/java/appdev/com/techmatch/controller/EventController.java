@@ -34,7 +34,7 @@ public class EventController {
         @RequestParam("userID") String userID
     ) throws IOException {
         // Combine selected topics into a comma-separated string
-    
+        
         // Link the user to the event
         User user = new User();
         user.setUserID(userID);
@@ -94,23 +94,23 @@ public Map<String, Object> getEventDetails(@PathVariable String id) {
         return "create-event"; // Render the event creation form
     }
 
-    @GetMapping("/events")
-    @ResponseBody
-    public List<Event> getFilteredEvents(
+
+    // Updated method for topic-based filtering
+    @GetMapping
+    public String getFilteredEvents(
         @RequestParam(value = "topic", required = false) String topic,
-        @RequestParam(value = "date", required = false) String date,
-        @RequestParam(value = "type", required = false) String type
+        Model model
     ) {
-        System.out.println("Filter Params - Topic: " + topic + ", Date: " + date + ", Type: " + type);
+        List<Event> events;
 
-        if (topic != null) {
-            return eventService.getEventsByTopic(topic);
-        } else if (date != null || type != null) {
-            return eventService.getEventsByDateAndType(date, type);
+        if (topic != null && !topic.isEmpty()) {
+            events = eventService.getEventsByTopic(topic);
         } else {
-            return eventService.getAllEvents();
+            events = eventService.getAllEvents();
         }
+
+        model.addAttribute("events", events);
+        model.addAttribute("selectedTopic", topic); // To highlight the selected topic in the UI
+        return "home"; // Render the home.html template with filtered events
     }
-
 }
-

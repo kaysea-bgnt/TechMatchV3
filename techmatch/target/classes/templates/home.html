@@ -28,20 +28,106 @@
 
     <main class="container mt-5">   
         <!-- Buttons for Event Topics -->
+        <!-- Submit a GET request to /events with the corresponding topic as a query parameter. -->
+    
         <div class="mb-3 d-flex flex-wrap gap-2">
-            <button class="btn btn-outline-light" onclick="filterByTopic('Academics')">Academics</button>
-            <button class="btn btn-outline-light" onclick="filterByTopic('Blockchain')">Blockchain</button>
-            <button class="btn btn-outline-light" onclick="filterByTopic('Career and Professional Development')">Career and Professional Development</button>
-            <button class="btn btn-outline-light" onclick="filterByTopic('Cloud Computing and Infrastructure')">Cloud Computing and Infrastructure</button>
-            <button class="btn btn-outline-light" onclick="filterByTopic('Cybersecurity')">Cybersecurity</button>
+            <!--Academics-->
+            <form action="/events" method="get">
+                <input type="hidden" name="topic" value="Academics">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Academics'} ? 'btn-primary' : 'btn-outline-light'">Academics</button>
+            </form>
+
+            <!--Blockchain-->
+            <form action="/events" method="get">
+                <input type="hidden" name="topic" value="Blockchain">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Blockchain'} ? 'btn-primary' : 'btn-outline-light'">Blockchain</button>
+            </form>
+
+            <!--Career and Professional Development-->
+            <form action="/events" method="get">
+                <input type="hidden" name="topic" value="Career and Professional Development">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Career and Professional Development'} ? 'btn-primary' : 'btn-outline-light'">Career and Professional Development</button>
+            </form>
+
+            <!--Cloud Computing and Infrastructure-->
+            <form action="/events" method="get">
+                <input type="hidden" name="topic" value="Cloud Computing and Infrastructure">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Cloud Computing and Infrastructure'} ? 'btn-primary' : 'btn-outline-light'">Cloud Computing and Infrastructure</button>
+            </form>
+
+            <!--Cybersecurity and Networking-->
+            <form action="/events" method="get">
+                <input type="hidden" name="topic" value="Cybersecurity">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Cybersecurity'} ? 'btn-primary' : 'btn-outline-light'">Cybersecurity and Networking</button>
+            </form>
+
+             <!--Game Development-->
+            <form action="/events" method="get">
+                <input type="hidden" name="topic" value="Cybersecurity">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Cybersecurity'} ? 'btn-primary' : 'btn-outline-light'">Cybersecurity and Networking</button>
+            </form>
+
+            <!--Internet of Things (IoT)-->
+            <form action="/events" method="get">
+                <input type="hidden" name="topic" value="Internet of Things (IoT)">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Internet of Things (IoT)'} ? 'btn-primary' : 'btn-outline-light'">Internet of Things (IoT)</button>
+            </form>
+
+            <!--Product and Project Management-->
+            <form action="/events" method="get">
+                <input type="hidden" name="topic" value="Product and Project Management">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Product and Project Management'} ? 'btn-primary' : 'btn-outline-light'">Product and Project Management</button>
+            </form>
+
+            <!--Programming and Development-->
+            <form action="/events" method="get">
+                <input type="hidden" name="topic" value="Programming and Development">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Programming and Development'} ? 'btn-primary' : 'btn-outline-light'">Programming and Development</button>
+            </form>
+
+            <!--Tech Culture and Social Impact-->
+            <form action="/events" method="get">
+                <input type="hidden" name="topic" value="Tech Culture and Social Impact">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Tech Culture and Social Impact'} ? 'btn-primary' : 'btn-outline-light'">Tech Culture and Social Impact</button>
+            </form>
+
+            <!--Tools and Frameworks-->
+            <form action="/events" method="get">
+                <input type="hidden" name="topic" value="Tools and Frameworks">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Tools and Frameworks'} ? 'btn-primary' : 'btn-outline-light'">Tools and Frameworks</button>
+            </form>
+
+            <!--UI/UX-->
+            <form action="/events" method="get">
+                <input type="hidden" name="topic" value="UI/UX">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'UI/UX'} ? 'btn-primary' : 'btn-outline-light'">User Interface and User Experience Design (UI/UX)</button>
+            </form>
+
+            <!--Web Development-->
+            <form action="/events" method="get">
+                <input type="hidden" name="topic" value="Web Development">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Web Development'} ? 'btn-primary' : 'btn-outline-light'">Web Development</button>
+            </form>
+
+            <!--Others-->
+            <form action="/events" method="get">
+                <input type="hidden" name="topic" value="Others">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Others'} ? 'btn-primary' : 'btn-outline-light'">Others</button>
+            </form>
+
+            
         </div>
+    
+        
 
         <!-- Event Section -->
         <h1 class="text-center text-white">Events</h1>
 
 
-        <div class="row row-cols-1 row-cols-md-3 g-4" id="event-list">
-            <!-- Dynamic Event Cards Here -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div th:if="${events.isEmpty()}" class="col-12 text-center text-white">
+                <h3>No events found for the selected topic.</h3>
+            </div>
             <div th:each="event : ${events}" class="col">
                 <div class="card h-100" data-event-id="${event.eventID}">
                     <img th:src="'data:image/jpeg;base64,' + ${event.base64Image}" class="card-img-top" alt="Event Image">

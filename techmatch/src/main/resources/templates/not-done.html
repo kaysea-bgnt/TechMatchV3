@@ -25,9 +25,8 @@
       <img src="/logo.png" alt="TechMatch Logo">
       <h2>TechMatch</h2>
       <!-- Updated Signup Form -->
-      <form class="signup-form" action="/api/users/signup" method="post">
+      <form class="login-form" action="/api/users/signup" method="post">
         <input type="text" name="username" placeholder="Username" required>
-        <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>
         <!-- Error message -->
         <div th:if="${error}" style="color: red; margin-bottom: 10px;">

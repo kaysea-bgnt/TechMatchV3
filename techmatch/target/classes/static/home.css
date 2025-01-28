@@ -40,3 +40,12 @@ body {
 .modal-body h5, .modal-body p {
     margin-bottom: 1rem;
 }
+
+.scroll-container {
+    width: 300px; /* Set a fixed width for the container */
+    height: 150px; /* Optional height */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-y: hidden; /* Hide vertical scrolling if needed */
+    white-space: nowrap; /* Prevent line breaks for content */
+    border: 1px solid #ccc; /* Optional: Add a border */
+}

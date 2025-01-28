@@ -10,6 +10,15 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    public boolean isUsernameAlreadyInUse(String username) {
+        return userRepository.findByUsernameOrEmail(username, null) != null;
+    }
+
+    // If Email or Username Exist
+    public boolean isEmailAlreadyInUse(String email) {
+        return userRepository.findByUsernameOrEmail(null, email) != null;
+    }
+
     public User saveUser(User user) {
         user.setUserID(generateCustomUserID());
         return userRepository.save(user);

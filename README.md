@@ -1,2 +1,2 @@
 # sample
-Application Development Project using JavaFX. TechMatch is an application for Event Management.
+Application Development Project using Springboot. TechMatch is an application for Event Management.

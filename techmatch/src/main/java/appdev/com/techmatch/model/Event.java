@@ -2,8 +2,6 @@ package appdev.com.techmatch.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.*;
 
 @Entity
@@ -72,7 +70,7 @@ public class Event {
     public String getOrganization() { return organization; }
     public void setOrganization(String organization) { this.organization = organization; }
     public boolean isFree() { return isFree; }
-    public void setFree(boolean free) { isFree = free; }
+    public void setFree(boolean isFree) { this.isFree = isFree;}
     public int getCapacity() { return capacity; }
     public void setCapacity(int capacity) { this.capacity = capacity; }
     public byte[] getEventImage() { return eventImage; }

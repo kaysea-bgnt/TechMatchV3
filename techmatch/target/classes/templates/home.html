@@ -8,6 +8,43 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/home.css">
+    <style>
+        /* Modal Background */
+        .modal-content {
+            background-color: #333 !important; /* Dark Gray Background */
+            color: #fff !important; /* White Text */
+            border: 1px solid #555; /* Slightly lighter gray border */
+        }
+        
+        /* Ensures All Text Inside Modal is White */
+        .modal-header, .modal-body, .modal-footer {
+            color: #fff !important;
+        }
+        
+        /* Close Button Visibility */
+        .modal-header .btn-close {
+            filter: invert(1); /* Ensures the close button is visible */
+        }
+        
+        /* Styled Button (Dark Gray Default, Yellow Hover) */
+        .modal-footer .btn-secondary {
+            background-color: #444 !important; /* Dark Gray */
+            color: #fff !important; /* White Text */
+            border: 1px solid #666 !important; /* Slight Border */
+            font-weight: bold;
+            transition: background-color 0.3s ease; /* Smooth Hover Effect */
+        }
+        
+        /* Hover Effect for Button */
+        .modal-footer .btn-secondary:hover {
+            background-color: #FFD700 !important; /* Gold (Yellow) */
+            color: #000 !important; /* Black Text */
+            border: 1px solid #FFD700 !important;
+        }
+           
+    </style>
+
+    
 </head>
 <body>
     <header class="header">
@@ -129,7 +166,7 @@
                 <h3>No events found for the selected topic.</h3>
             </div>
             <div th:each="event : ${events}" class="col">
-                <div class="card h-100" data-event-id="${event.eventID}">
+                <div class="card h-100 event-card" th:attr="data-event-id=${event.eventID}">
                     <img th:src="'data:image/jpeg;base64,' + ${event.base64Image}" class="card-img-top" alt="Event Image">
                     <div class="card-body">
                         <h5 class="card-title" th:text="${event.eventName}"></h5>
@@ -138,10 +175,42 @@
                         </p>
                         <p class="card-text"><strong>Type:</strong> <span th:text="${event.eventType}"></span></p>
                         <p class="card-text"><strong>Date:</strong> <span th:text="${event.startDate} + ' to ' + ${event.endDate}"></span></p>
+                        <p class="card-text"><strong>Capacity:</strong> <span th:text="${event.capacity}"></span></p>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Event Details Modal -->
+        <div class="modal fade" id="eventDetailModal" tabindex="-1" aria-labelledby="eventDetailModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="eventTitle">Event Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Description:</strong> <span id="eventDescription"></span></p>
+                        <p><strong>Location:</strong> <span id="eventLocation"></span></p>
+                        <p><strong>Date:</strong> <span id="eventDate"></span></p>
+                        <p><strong>Time:</strong> <span id="eventTime"></span></p>
+                        <p><strong>Type:</strong> <span id="eventType"></span></p>
+                        <p><strong>Topics:</strong> <span id="eventTopics"></span></p>
+                        <p><strong>Organizer:</strong> <span id="eventOrganizer"></span></p>
+                        <p><strong>Capacity:</strong> <span id="eventCapacity"></span></p>
+                        <p><strong>Is ticket free? </strong> <span id="eventIsFree"></span></p>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Register</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+
     </main>
 
     <!-- Scripts -->

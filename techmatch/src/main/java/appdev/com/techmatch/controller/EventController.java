@@ -31,7 +31,8 @@ public class EventController {
         @ModelAttribute Event event,
         @RequestParam("eventTopics") String[] eventTopics, // Collect selected topics
         @RequestParam("imageFile") MultipartFile imageFile,
-        @RequestParam("userID") String userID
+        @RequestParam("userID") String userID,
+        @RequestParam(value = "isFree", defaultValue = "false") boolean isFree // Fix here
     ) throws IOException {
         // Combine selected topics into a comma-separated string
         
@@ -82,6 +83,11 @@ public Map<String, Object> getEventDetails(@PathVariable String id) {
     response.put("endDate", event.getEndDate());
     response.put("eventType", event.getEventType());
     response.put("topics", event.getTopics().stream().map(Topic::getName).toList());
+    response.put("organization", event.getOrganization());
+    response.put("startTime", event.getStartTime());
+    response.put("endTime", event.getEndTime());
+    response.put("eventImage", Base64.getEncoder().encodeToString(event.getEventImage()));
+    response.put("isFree", event.isFree());
 
     return response;
 }

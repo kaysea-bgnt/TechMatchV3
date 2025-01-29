@@ -98,16 +98,28 @@
                 <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Cybersecurity'} ? 'btn-primary' : 'btn-outline-light'">Cybersecurity and Networking</button>
             </form>
 
+            <!--Data Science and Data Analytics-->
+            <form action="/events" method="get">
+                <input type="hidden" name="topic" value="Data Science and Data Analytics">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Data Science and Data Analytics'} ? 'btn-primary' : 'btn-outline-light'">Data Science and Data Analytics</button>
+            </form>
+
              <!--Game Development-->
             <form action="/events" method="get">
-                <input type="hidden" name="topic" value="Cybersecurity">
-                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Cybersecurity'} ? 'btn-primary' : 'btn-outline-light'">Cybersecurity and Networking</button>
+                <input type="hidden" name="topic" value="Game Development">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Game Development'} ? 'btn-primary' : 'btn-outline-light'">Game Development</button>
             </form>
 
             <!--Internet of Things (IoT)-->
             <form action="/events" method="get">
                 <input type="hidden" name="topic" value="Internet of Things (IoT)">
                 <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Internet of Things (IoT)'} ? 'btn-primary' : 'btn-outline-light'">Internet of Things (IoT)</button>
+            </form>
+
+            <!--Machine Learning and Artificial Intelligence-->
+            <form action="/events" method="get">
+                <input type="hidden" name="topic" value="Machine Learning and Artificial Intelligence">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Machine Learning and Artificial Intelligence'} ? 'btn-primary' : 'btn-outline-light'">Machine Learning and Artificial Intelligence</button>
             </form>
 
             <!--Product and Project Management-->
@@ -136,9 +148,10 @@
 
             <!--UI/UX-->
             <form action="/events" method="get">
-                <input type="hidden" name="topic" value="UI/UX">
-                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'UI/UX'} ? 'btn-primary' : 'btn-outline-light'">User Interface and User Experience Design (UI/UX)</button>
+                <input type="hidden" name="topic" value="UI / UX">
+                <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'UI / UX'} ? 'btn-primary' : 'btn-outline-light'">UI / UX</button>
             </form>
+            
 
             <!--Web Development-->
             <form action="/events" method="get">
@@ -151,9 +164,8 @@
                 <input type="hidden" name="topic" value="Others">
                 <button type="submit" class="btn btn-outline-light" th:classappend="${selectedTopic == 'Others'} ? 'btn-primary' : 'btn-outline-light'">Others</button>
             </form>
-
-            
         </div>
+
     
         
 

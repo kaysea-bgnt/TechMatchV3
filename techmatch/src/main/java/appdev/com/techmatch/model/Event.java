@@ -11,7 +11,6 @@ public class Event {
     private String eventID;
 
     private String eventName;
-    private String description;
     private String location;
     private String eventType;
     private LocalDate startDate;
@@ -21,6 +20,9 @@ public class Event {
     private String organization;
     private boolean isFree;
     private int capacity;
+
+    @Lob
+    private String description;
 
     @Lob
     private byte[] eventImage; // Store image binary data

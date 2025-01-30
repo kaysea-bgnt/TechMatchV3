@@ -83,8 +83,10 @@ public class EventService {
     public List<Event> getEventsByUserID(String userID) {
         return eventRepository.findByUserUserID(userID);
     }
-    
 
+    public List<Event> searchEvents(String searchQuery) {
+        return eventRepository.findByEventNameContainingIgnoreCaseOrOrganizationContainingIgnoreCase(searchQuery, searchQuery);
+    }
     
     
 }

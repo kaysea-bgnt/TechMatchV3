@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Event Attendees</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <h2>Event Attendees</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Event ID</th>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="attendee : ${attendees}">
+                <td th:text="${attendee.eventId}"></td>  <!-- Fix the case-sensitive issue -->
+                <td th:text="${attendee.userId}"></td>
+                <td th:text="${attendee.username}"></td>
+                <td th:text="${attendee.email}"></td>
+            </tr>                       
+        </tbody>
+    </table>
+</body>
+</html>

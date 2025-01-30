@@ -52,7 +52,12 @@ public class Event {
 
     // Getters and Setters
     public String getEventID() { return eventID; }
-    public void setEventID(String eventID) { this.eventID = eventID; }
+    public void setEventID(String eventID) {
+        if (this.eventID != null) { // Prevents modifying eventID after creation
+            throw new IllegalStateException("Cannot modify eventID after creation");
+        }
+        this.eventID = eventID;
+    }
     public String getEventName() { return eventName; }
     public void setEventName(String eventName) { this.eventName = eventName; }
     public String getDescription() { return description; }
@@ -79,5 +84,18 @@ public class Event {
     public void setEventImage(byte[] eventImage) { this.eventImage = eventImage; }
     public User getUser() { return user; } 
     public void setUser(User user) { this.user = user; }
+
+    @ManyToMany
+    @JoinTable(
+        name = "event_attendees",
+        joinColumns = @JoinColumn(name = "eventID"),
+        inverseJoinColumns = @JoinColumn(name = "userID")
+    )
+    private Set<User> attendees = new HashSet<>();
+
+    public Set<User> getAttendees() { return attendees; }
+    public void setAttendees(Set<User> attendees) { this.attendees = attendees; }
+
+
 
 }

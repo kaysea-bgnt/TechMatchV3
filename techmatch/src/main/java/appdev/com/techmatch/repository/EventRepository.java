@@ -1,5 +1,6 @@
 package appdev.com.techmatch.repository;
 
+import appdev.com.techmatch.dto.EventAttendeeDTO; // Ensure this class exists in the specified package
 import appdev.com.techmatch.model.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -18,5 +19,10 @@ public interface EventRepository extends JpaRepository<Event, String> {
     List<Event> findByStartDate(LocalDate date);
 
     List<Event> findByEventType(String type);
+
+    @Query("SELECT new appdev.com.techmatch.dto.EventAttendeeDTO(e.eventID, u.userID, u.username, u.email) " +
+    "FROM Event e JOIN e.attendees u " +
+    "WHERE e.eventID = :eventID")
+    List<EventAttendeeDTO> getEventAttendeesWithDetails(@Param("eventID") String eventID);
 }
 

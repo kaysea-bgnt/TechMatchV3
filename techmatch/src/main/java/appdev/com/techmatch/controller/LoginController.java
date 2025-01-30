@@ -73,4 +73,19 @@ public class LoginController {
         return "redirect:/login?logout=true"; // Redirect to login with a logout flag
     }
     
+    @GetMapping("/user/details")
+    @ResponseBody
+    public Map<String, Object> getUserDetails(HttpSession session) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        Map<String, Object> userResponse = new HashMap<>();
+
+        if (loggedInUser != null) {
+            userResponse.put("userID", loggedInUser.getUserID());
+            userResponse.put("username", loggedInUser.getUsername());
+            userResponse.put("email", loggedInUser.getEmail());
+        }
+
+        return userResponse;
+    }
+
 }

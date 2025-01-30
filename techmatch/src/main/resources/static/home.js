@@ -1,42 +1,27 @@
 let currentEventID = null; // Store the current event ID
-let userID = 'USER-000001'; // Replace this with the logged-in user's ID from the session
+let userID = null; // Store the current user ID
 
-// Register for the event
-function registerForEvent() {
-    if (!currentEventID || !userID) {
-        console.error('Missing event ID or user ID');
-        alert('Unable to register. Please refresh the page and try again.');
-        return;
+
+// Fetch user details when the page loads
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const userResponse = await fetch("/user/details");
+        const userData = await userResponse.json();
+
+        if (userData.userID) {
+            userID = userData.userID;
+            console.log("Logged-in user:", userData);
+        } else {
+            console.error("User not logged in.");
+        }
+    } catch (error) {
+        console.error("Error fetching user details:", error);
     }
 
-    console.log("Sending registration data:", { userID, eventID: currentEventID });
+    // Attach event listeners for event cards dynamically
+    attachEventListeners();
+});
 
-    fetch(`/register`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userID, eventID: currentEventID }),
-    })
-        .then(response => {
-            if (response.ok) {
-                console.log('Successfully registered for event');
-                // Update the button text and state
-                const registerButton = document.getElementById('registerButton');
-                registerButton.textContent = 'Going';
-                registerButton.classList.remove('btn-primary');
-                registerButton.classList.add('btn-success');
-                registerButton.disabled = true;
-            } else {
-                console.error('Failed to register for event');
-                alert('Registration failed. Please try again.');
-            }
-        })
-        .catch(error => {
-            console.error('Error registering for event:', error);
-            alert('An error occurred during registration. Please try again later.');
-        });
-}
 
 // Filter events by topic
 function filterByTopic(topic) {
@@ -103,31 +88,34 @@ function updateEventList(events) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.event-card').forEach(card => {
+// Function to attach click event listeners to event cards
+function attachEventListeners() {
+    document.querySelectorAll(".event-card").forEach((card) => {
         card.addEventListener("click", function () {
-            let eventID = card.getAttribute('data-event-id'); // Get Event ID from card
+            currentEventID = card.getAttribute("data-event-id");
 
-            if (!eventID) {
+            if (!currentEventID) {
                 console.error("Event ID is missing.");
                 return;
             }
 
-            // Fetch event details from the server
-            fetch(`/events/${eventID}`)
-                .then(response => response.json())
-                .then(event => {
+            console.log("Selected Event ID:", currentEventID);
+
+            // Fetch event details
+            fetch(`/events/${currentEventID}`)
+                .then((response) => response.json())
+                .then((event) => {
                     if (!event) {
                         console.error("Event not found");
                         return;
                     }
 
-                    // Populate modal with event details (handle undefined/null cases)
+                    // Populate modal with event details
                     document.getElementById("eventTitle").textContent = event.eventName || "N/A";
                     document.getElementById("eventDescription").textContent = event.description || "N/A";
                     document.getElementById("eventLocation").textContent = event.location || "N/A";
                     document.getElementById("eventDate").textContent = (event.startDate && event.endDate) ? `${event.startDate} to ${event.endDate}` : "N/A";
-                    
+
                     // Format Time (Convert to AM/PM Format)
                     function formatTime(time) {
                         if (!time) return "N/A";
@@ -140,26 +128,58 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById("eventTime").textContent = (event.startTime && event.endTime) ? `${formatTime(event.startTime)} - ${formatTime(event.endTime)}` : "N/A";
 
                     document.getElementById("eventType").textContent = event.eventType || "N/A";
-
-                    // Handle multiple topics (array)
                     document.getElementById("eventTopics").textContent = (event.topics && event.topics.length > 0) ? event.topics.join(", ") : "N/A";
-                    
                     document.getElementById("eventOrganizer").textContent = event.organization || "N/A";
-
-                    // Ensure Capacity is displayed correctly
                     document.getElementById("eventCapacity").textContent = event.capacity || "N/A";
-                    
-                    // Correctly display "Yes" or "No" for isFree
                     document.getElementById("eventIsFree").textContent = (event.isFree === true || event.isFree === "true") ? "Yes" : "No";
+
+                    // Reset Register button state
+                    let registerButton = document.getElementById("registerButton");
+                    registerButton.textContent = "Register";
+                    registerButton.classList.add("btn-primary");
+                    registerButton.classList.remove("btn-success");
+                    registerButton.disabled = false;
 
                     // Show the modal
                     let eventModal = new bootstrap.Modal(document.getElementById("eventDetailModal"));
                     eventModal.show();
                 })
-                .catch(error => console.error("Error fetching event details:", error));
+                .catch((error) => console.error("Error fetching event details:", error));
         });
     });
+}
+
+// Functionality for Register button
+document.getElementById("registerButton").addEventListener("click", function () {
+    if (!currentEventID || !userID) {
+        console.error("Event ID or User ID is missing.");
+        alert("Failed to register for the event. Please try again later.");
+        return;
+    }
+
+    console.log("Registering user for event:", { userID, eventID: currentEventID });
+
+    fetch(`/events/register`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userID, eventID: currentEventID }),
+    })
+    .then((response) => {
+        if (response.ok) {
+            alert("Successfully registered for the event!");
+            let registerButton = document.getElementById("registerButton");
+            registerButton.textContent = "Registered";
+            registerButton.classList.remove("btn-primary");
+            registerButton.classList.add("btn-success");
+            registerButton.disabled = true;
+        } else {
+            alert("Failed to register for the event. Please try again later.");
+        }
+    })
+    .catch((error) => {
+        console.error("Error registering user for event:", error);
+        alert("Failed to register for the event. Please try again later.");
+    });
 });
-
-
-

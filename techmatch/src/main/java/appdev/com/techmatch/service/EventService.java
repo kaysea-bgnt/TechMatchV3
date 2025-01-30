@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import appdev.com.techmatch.model.Event;
 import appdev.com.techmatch.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.time.LocalDate;
 import java.util.*;
 
@@ -14,9 +13,24 @@ public class EventService {
     private EventRepository eventRepository;
 
     public Event saveEvent(Event event) {
-        event.setEventID(generateCustomEventID());
-        return eventRepository.save(event);
+        // Only generate an event ID if it's a new event (i.e., eventID is null)
+        if (event.getEventID() == null || event.getEventID().isEmpty()) {
+            event.setEventID(generateCustomEventID());
+            return eventRepository.save(event);
+        }
+    
+        // If the event already exists, fetch it from the database and update it instead
+        Event existingEvent = eventRepository.findById(event.getEventID()).orElse(null);
+        if (existingEvent == null) {
+            throw new IllegalArgumentException("Event not found: " + event.getEventID());
+        }
+    
+        // Only update attendees, do NOT overwrite the event ID
+        existingEvent.setAttendees(event.getAttendees());
+    
+        return eventRepository.save(existingEvent);
     }
+    
 
     private String generateCustomEventID() {
         long count = eventRepository.count();
@@ -50,6 +64,7 @@ public class EventService {
         System.out.println("Events found for date " + date + " and type " + type + ": " + events.size());
         return events;
     }
+
     
     
 }

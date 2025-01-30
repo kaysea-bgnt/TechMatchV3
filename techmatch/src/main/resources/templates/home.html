@@ -65,7 +65,30 @@
 
     <main class="container mt-5">   
         <!-- Buttons for Event Topics -->
+
+        <!-- Buttons for Event Topics -->
         <!-- Submit a GET request to /events with the corresponding topic as a query parameter. -->
+        <div class="mb-3 text-white">
+            <p>Filter by Event Topics:</p>
+            <button class="btn btn-light topic-button" data-topic="Academics" id="topic1" >Academics</button>
+            <button class="btn btn-light topic-button" data-topic="Application Development" id="topic2">Application Development</button>
+            <button class="btn btn-light topic-button" data-topic="Blockchain" id="topic3">Blockchain</button>
+            <button class="btn btn-light topic-button" data-topic="Career and Professional Development" id="topic4">Career and Professional Development</button>
+            <button class="btn btn-light topic-button" data-topic="Cloud Computing" id="topic5">Cloud Computing</button>
+            <button class="btn btn-light topic-button" data-topic="Cybersecurity" id="topic6">Cybersecurity</button>
+            <button class="btn btn-light topic-button" data-topic="Data Science and Data Analytics" id="topic7">Data Science and Data Analytics</button>
+            <button class="btn btn-light topic-button" data-topic="Game Development" id="topic8">Game Development</button>
+            <button class="btn btn-light topic-button" data-topic="Internet of Things (IoT)" id="topic9">Internet of Things (IoT)</button>
+            <button class="btn btn-light topic-button" data-topic="Machine Learning and Artificial Intelligence" id="topic10">Machine Learning and Artificial Intelligence</button>
+            <button class="btn btn-light topic-button" data-topic="Networking and Infrastructure" id="topic11">Networking and Infrastructure</button>
+            <button class="btn btn-light topic-button" data-topic="Product and Project Management" id="topic12">Product and Project Management</button>
+            <button class="btn btn-light topic-button" data-topic="Programming and Development" id="topic13">Programming and Development</button>
+            <button class="btn btn-light topic-button" data-topic="Tech Culture and Social Impact" id="topic14">Tech Culture and Social Impact</button>
+            <button class="btn btn-light topic-button" data-topic="Tools and Frameworks" id="topic15">Tools and Frameworks</button>
+            <button class="btn btn-light topic-button" data-topic="UI/UX" id="topic16">UI/UX</button>
+            <button class="btn btn-light topic-button" data-topic="Others" id="topic17">Others</button>
+        </div>
+
 
     
         <!-- Event Filtering SECTION HERE-->
@@ -73,10 +96,12 @@
             <label for="eventTypeFilter" class="form-label">Filter by Event Type:</label>
             <select class="form-select" id="eventTypeFilter">
                 <option value="">All Event Types</option>
-                <option value="Webinar">Webinar</option>
-                <option value="Conference">Conference</option>
-                <option value="Workshop">Workshop</option>
+                <option value="Hackathon">Hackathon</option>
                 <option value="Networking">Networking</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Seminar">Seminar</option>
+                <option value="Webinar">Webinar</option>
+                <option value="Study Session">Study Session</option>
                 <!-- Add more types if needed based on your db-->
             </select>
             <button id="applyFilter">Apply Filter</button>
@@ -122,7 +147,10 @@
                         <p><strong>Date:</strong> <span id="eventDate"></span></p>
                         <p><strong>Time:</strong> <span id="eventTime"></span></p>
                         <p><strong>Type:</strong> <span id="eventType"></span></p>
+
                         <p><strong>Topics:</strong> <span id="eventTopics"></span></p>
+                        
+
                         <p><strong>Organizer:</strong> <span id="eventOrganizer"></span></p>
                         <p><strong>Capacity:</strong> <span id="eventCapacity"></span></p>
                         <p><strong>Is ticket free? </strong> <span id="eventIsFree"></span></p>

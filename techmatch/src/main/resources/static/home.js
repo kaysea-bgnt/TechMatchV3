@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 // Function to attach click event listeners to event cards
 function attachEventListeners() {
     const eventContainer = document.querySelector('.row.row-cols-1.row-cols-md-3.g-4');
-    
+
     eventContainer.addEventListener('click', function(event) {
         const card = event.target.closest('.event-card');
         if (!card) return;
@@ -52,27 +52,48 @@ function attachEventListeners() {
                 }
 
                 // Populate modal with event details
-                document.getElementById("eventTitle").textContent = event.eventName || "N/A";
-                document.getElementById("eventDescription").textContent = event.description || "N/A";
-                document.getElementById("eventLocation").textContent = event.location || "N/A";
+                 document.getElementById("eventTitle").textContent = event.eventName || "N/A";
+                 document.getElementById("eventDescription").textContent = event.description || "N/A";
+                  document.getElementById("eventLocation").textContent = event.location || "N/A";
                 document.getElementById("eventDate").textContent = (event.startDate && event.endDate) ? `${event.startDate} to ${event.endDate}` : "N/A";
 
+
                 // Format Time (Convert to AM/PM Format)
-                function formatTime(time) {
-                    if (!time) return "N/A";
-                    const [hour, minute] = time.split(":");
-                    const ampm = hour >= 12 ? "PM" : "AM";
-                    const formattedHour = hour % 12 || 12;
+                  function formatTime(time) {
+                     if (!time) return "N/A";
+                    try {
+                      const [hour, minute] = time.split(":");
+                        let ampm = "AM";
+                        let formattedHour = parseInt(hour, 10);
+                        if (formattedHour >= 12) {
+                             ampm = "PM";
+                             if (formattedHour > 12){
+                                formattedHour -= 12;
+                             }
+                        }
+                       if (formattedHour === 0){
+                            formattedHour = 12;
+                       }
                     return `${formattedHour}:${minute} ${ampm}`;
-                }
+                  } catch (error){
+                      console.error("Error formatting time", error);
+                       return "N/A";
+                    }
+                  }
 
                 document.getElementById("eventTime").textContent = (event.startTime && event.endTime) ? `${formatTime(event.startTime)} - ${formatTime(event.endTime)}` : "N/A";
 
+
                 document.getElementById("eventType").textContent = event.eventType || "N/A";
-                document.getElementById("eventTopics").textContent = (event.topics && event.topics.length > 0) ? event.topics.join(", ") : "N/A";
-                document.getElementById("eventOrganizer").textContent = event.organization || "N/A";
-                document.getElementById("eventCapacity").textContent = event.capacity || "N/A";
-                document.getElementById("eventIsFree").textContent = (event.isFree === true || event.isFree === "true") ? "Yes" : "No";
+                 // Correctly populating the topics using javascript, and that the data is an array
+                 const eventTopicsElement = document.getElementById("eventTopics");
+                  eventTopicsElement.textContent = ""; // Clear the HTML before setting it
+                 eventTopicsElement.textContent = (event.topics && Array.isArray(event.topics) && event.topics.length > 0) ? event.topics.map(topic => topic.name).join(", ") : "N/A";
+
+
+                 document.getElementById("eventOrganizer").textContent = event.organization || "N/A";
+                 document.getElementById("eventCapacity").textContent = event.capacity || "N/A";
+                 document.getElementById("eventIsFree").textContent = (event.isFree === true || event.isFree === "true") ? "Yes" : "No";
 
                 // Reset Register button state
                 let registerButton = document.getElementById("registerButton");
@@ -107,34 +128,32 @@ document.getElementById("registerButton").addEventListener("click", function () 
         },
         body: JSON.stringify({ userID, eventID: currentEventID }),
     })
-    .then((response) => {
-        if (response.ok) {
-            alert("Successfully registered for the event!");
-            let registerButton = document.getElementById("registerButton");
-            registerButton.textContent = "Registered";
-            registerButton.classList.remove("btn-primary");
-            registerButton.classList.add("btn-success");
-            registerButton.disabled = true;
-        } else {
+        .then((response) => {
+            if (response.ok) {
+                alert("Successfully registered for the event!");
+                let registerButton = document.getElementById("registerButton");
+                registerButton.textContent = "Registered";
+                registerButton.classList.remove("btn-primary");
+                registerButton.classList.add("btn-success");
+                registerButton.disabled = true;
+            } else {
+                alert("Failed to register for the event. Please try again later.");
+            }
+        })
+        .catch((error) => {
+            console.error("Error registering user for event:", error);
             alert("Failed to register for the event. Please try again later.");
-        }
-    })
-    .catch((error) => {
-        console.error("Error registering user for event:", error);
-        alert("Failed to register for the event. Please try again later.");
-    });
+        });
 });
 
 
 // FUNCTIONALITY FOR APPLY FILTERS AND RESET FILTERS
 function setupFilterFunctionality() {
     const eventTypeFilter = document.getElementById('eventTypeFilter');
-    const eventContainer = document.querySelector('.row.row-cols-1.row-cols-md-3.g-4');
     const applyFilterButton = document.getElementById("applyFilter");
     const resetFilterButton = document.getElementById("resetFilter");
-    const eventCardsContainer = document.querySelector('.row.row-cols-1.row-cols-md-3.g-4');
 
-    let selectedTopic = null;
+    let selectedTopics = [];
 
     // Function to highlight the clicked button and reset the other
     function highlightButton(clickedButton, otherButton) {
@@ -145,45 +164,70 @@ function setupFilterFunctionality() {
         otherButton.style.color = "";
     }
 
-     // Function to fetch and display events based on filters
+
+    // Function to fetch and display events based on filters
     function loadFilteredEvents() {
         const selectedType = eventTypeFilter.value;
-        highlightButton(applyFilterButton, resetFilterButton);
-
+          highlightButton(applyFilterButton, resetFilterButton);
         let url = `/events?`;
-        if (selectedType) {
-            url += `eventType=${selectedType}`;
-        }
-        if (selectedTopic) {
-            url += `${selectedType ? '&' : ''}topic=${selectedTopic}`;
+
+        if (selectedTopics && selectedTopics.length > 0) {
+             selectedTopics.forEach((topic, index) => {
+                url += `topic=${topic}`;
+                if(index < selectedTopics.length - 1){
+                    url += "&";
+                }
+             })
+           if (selectedType) {
+              url += `&eventType=${selectedType}`;
+            }
         }
 
-        // Load entire page when filter changes
+        else if(selectedType){
+             url += `eventType=${selectedType}`;
+        }
+
+       // Load entire page when filter changes
         window.location.href = url;
-
     }
-
 
     // Function to reset filters
     function resetFilters() {
-        eventTypeFilter.value = "";
-        selectedTopic = null;
-        highlightButton(resetFilterButton, applyFilterButton);
+         eventTypeFilter.value = "";
+         selectedTopics = [];
+         highlightButton(resetFilterButton, applyFilterButton);
+
 
         // Load entire page when reset filters
-        window.location.href = "/events";
+         window.location.href = "/events";
+
+
+        // Clear Button styles
+        const topicButtons = document.querySelectorAll('.topic-button');
+        topicButtons.forEach(button => {
+            button.style.backgroundColor = "";
+            button.style.color = "";
+        })
     }
 
 
        // Get all elements with class "topic-button"
        const topicButtons = document.querySelectorAll('.topic-button');
-       
+
         // Attach a click event listener to each topic button
        topicButtons.forEach(button => {
            button.addEventListener('click', function() {
-             selectedTopic = this.dataset.topic;
-             loadFilteredEvents();
-          });
+             const topic = this.dataset.topic;
+              if (selectedTopics.includes(topic)) {
+                selectedTopics = selectedTopics.filter(t => t !== topic);
+                 this.style.backgroundColor = "";
+                 this.style.color = "";
+            } else {
+                selectedTopics.push(topic);
+                this.style.backgroundColor = "orange";
+                 this.style.color = "white";
+            }
+        });
        });
 
 

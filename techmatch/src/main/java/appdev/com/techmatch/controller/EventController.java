@@ -119,6 +119,7 @@ public class EventController {
         response.put("endTime", event.getEndTime());
         response.put("eventImage", Base64.getEncoder().encodeToString(event.getEventImage()));
         response.put("isFree", event.isFree());
+        response.put("capacity", event.getCapacity());
 
         return response;
     }

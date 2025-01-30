@@ -45,9 +45,11 @@ public class EventController {
         @ModelAttribute Event event,
         @RequestParam("eventTopics") String[] eventTopics, // Collect selected topics
         @RequestParam("imageFile") MultipartFile imageFile,
-        @RequestParam(value = "isFree", defaultValue = "false") boolean isFree,
+        @RequestParam("isFree") String isFreeStr, //capture the isFree value as string
         HttpSession session //get session
     ) throws IOException {
+
+        event.setFree(Boolean.parseBoolean(isFreeStr));
         
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (loggedInUser == null) {
@@ -102,12 +104,7 @@ public class EventController {
         response.put("startDate", event.getStartDate());
         response.put("endDate", event.getEndDate());
         response.put("eventType", event.getEventType());
-        // Modified line
-        //response.put("topics", event.getTopics().stream().map(Topic::getName).collect(Collectors.toList()));
 
-        //response.put("topics", event.getTopics());
-
-        // Replace this line with the new one that includes topic details
         response.put("topics", event.getTopics().stream()
         .map(topic -> {
             Map<String, Object> topicDetails = new HashMap<>();

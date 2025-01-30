@@ -25,5 +25,7 @@ public interface EventRepository extends JpaRepository<Event, String> {
     "WHERE e.eventID = :eventID")
     List<EventAttendeeDTO> getEventAttendeesWithDetails(@Param("eventID") String eventID);
 
+    List<Event> findByUserUserID(String userID);
+
 }
 

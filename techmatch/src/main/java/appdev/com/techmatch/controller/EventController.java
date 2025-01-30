@@ -179,15 +179,30 @@ public Map<String, Object> getEventDetails(@PathVariable String id) {
         return ResponseEntity.ok("User registered successfully");
     }
 
-    
-    
-    
     @GetMapping("/attendees/{eventID}")
     public String getEventAttendees(@PathVariable String eventID, Model model) {
         List<EventAttendeeDTO> attendees = eventRepository.getEventAttendeesWithDetails(eventID);
         model.addAttribute("attendees", attendees);
         return "event_attendees"; 
     }
+
+    @GetMapping("/my-events")
+    public String getUserCreatedEvents(HttpSession session, Model model) {
+        // Get the logged-in user's ID from session
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        
+        if (loggedInUser == null) {
+            return "redirect:/login"; // Redirect if user is not logged in
+        }
+    
+        // Fetch events created by this user
+        List<Event> userEvents = eventService.getEventsByUserID(loggedInUser.getUserID());
+        
+        model.addAttribute("userEvents", userEvents);
+        
+        return "my-events"; // This will be your HTML page displaying user-created events
+    }
+    
     
 
     

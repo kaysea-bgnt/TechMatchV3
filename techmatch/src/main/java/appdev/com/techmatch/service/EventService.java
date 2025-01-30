@@ -65,6 +65,11 @@ public class EventService {
         return events;
     }
 
+    public List<Event> getEventsByUserID(String userID) {
+        return eventRepository.findByUserUserID(userID);
+    }
+    
+
     
     
 }

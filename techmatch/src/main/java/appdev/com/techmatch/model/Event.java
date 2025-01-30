@@ -36,7 +36,7 @@ public class Event {
     }
 
     @ManyToOne
-    @JoinColumn(name = "userID", nullable = false)
+    @JoinColumn(name = "userid", nullable = false)
     private User user; // Foreign key to User table
 
     @ManyToMany

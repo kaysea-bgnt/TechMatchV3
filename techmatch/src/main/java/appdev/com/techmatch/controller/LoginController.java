@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+
 import appdev.com.techmatch.service.EventService;
 import java.util.*;
 
@@ -43,7 +44,7 @@ public class LoginController {
         }
     }
 
-        @GetMapping("/home")
+    @GetMapping("/home")
     public String showHomePage( HttpSession session, Model model) {
         //check if the user is logged in
         User loggedInUser = (User) session.getAttribute("loggedInUser");

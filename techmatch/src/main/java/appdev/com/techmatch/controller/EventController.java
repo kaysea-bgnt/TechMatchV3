@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import jakarta.servlet.http.HttpSession;
+
 
 import appdev.com.techmatch.repository.TopicRepository;
 import appdev.com.techmatch.service.UserService;
@@ -44,22 +46,28 @@ public class EventController {
         @ModelAttribute Event event,
         @RequestParam("eventTopics") String[] eventTopics, // Collect selected topics
         @RequestParam("imageFile") MultipartFile imageFile,
-        @RequestParam("userID") String userID,
-        @RequestParam(value = "isFree", defaultValue = "false") boolean isFree // Fix here
+        @RequestParam(value = "isFree", defaultValue = "false") boolean isFree,
+        HttpSession session //get session
     ) throws IOException {
-        // Combine selected topics into a comma-separated string
         
-        // Link the user to the event
-        User user = new User();
-        user.setUserID(userID);
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/login";
+        }
+        
+        String userID = loggedInUser.getUserID(); // Get user ID from the User object
+        User user = userService.getUserById(userID);
+        
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+        
         event.setUser(user);
-    
+        
         // Process the uploaded image
         if (!imageFile.isEmpty()) {
             event.setEventImage(imageFile.getBytes());
         }
-
-
         // Process event topics
         for (String topicName : eventTopics) {
             // Check if topic already exists
@@ -181,7 +189,7 @@ public Map<String, Object> getEventDetails(@PathVariable String id) {
         return "event_attendees"; 
     }
     
-        
+
     
 
     

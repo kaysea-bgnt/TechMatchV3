@@ -46,7 +46,6 @@
 
     
 </head>
-<body>
     <header class="header">
         <div class="logo">TechMatch</div>
         <h3>Welcome, <span th:text="${username}"></span>!</h3>
@@ -55,13 +54,15 @@
             <input type="text" placeholder="Search..." class="form-control">
         </div>
         <div class="nav-items">
-            <button class="btn btn-secondary" onclick="location.href='/events/my-events'">created events</button>
-            <button class="btn btn-warning" onclick="location.href='/create'">+ Create Event</button>
+            <button class="btn btn-warning" onclick="location.href='/events/my-events'">created events</button>
+            <button class="btn btn-warning" onclick="location.href='/create'">+ Create Event</button> <br>
             <form action="/logout" method="post">
                 <button type="submit" class="btn btn-warning">Logout</button>
             </form>
         </div>
     </header>
+
+<body>
 
     <main class="container mt-5">   
         <!-- Buttons for Event Topics -->

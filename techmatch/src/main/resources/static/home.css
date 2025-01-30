@@ -8,6 +8,8 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
+    gap : 1rem;
+    flex-wrap: wrap;
     background-color: #1f1f1f;
     color: #ffffff;
 }
@@ -15,12 +17,19 @@ body {
 .header .logo {
     font-size: 1.5rem;
     font-weight: bold;
+    flex-shrink: 0;
 }
 
-.header .nav-items button {
-    margin-left: 1rem;
+.btn-warning {
+    background-color: #FFD700;
+    border-color: #FFD700;
+    color: #000;
+    transition: all 0.3s ease;
 }
-
+.btn-warning:hover {
+    background-color: #FFC107;
+    border-color: #FFC107;
+}
 .card {
     background-color: #1f1f1f;
     color: #ffffff;
@@ -49,4 +58,11 @@ body {
     white-space: nowrap; /* Prevent line breaks for content */
     border: 1px solid #ccc; /* Optional: Add a border */
 }
+.nav-items {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
 

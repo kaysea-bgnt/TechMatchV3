@@ -21,9 +21,8 @@ import appdev.com.techmatch.repository.EventRepository;
 
 import java.io.IOException;
 import java.util.*;
-
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
-
 
 
 @Controller
@@ -82,38 +81,52 @@ public class EventController {
         }
 
         eventService.saveEvent(event);
-    
-    
+
+
         return "redirect:/home";
     }
 
-@GetMapping("/{id}") // Change from /events/{id} to simply /{id}
-@ResponseBody
-public Map<String, Object> getEventDetails(@PathVariable String id) {
-    Event event = eventService.getEventById(id);
+    @GetMapping("/{id}") // Change from /events/{id} to simply /{id}
+    @ResponseBody
+    public Map<String, Object> getEventDetails(@PathVariable String id) {
+        Event event = eventService.getEventById(id);
 
-    if (event == null) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
+        if (event == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("eventName", event.getEventName());
+        response.put("description", event.getDescription());
+        response.put("location", event.getLocation());
+        response.put("startDate", event.getStartDate());
+        response.put("endDate", event.getEndDate());
+        response.put("eventType", event.getEventType());
+        // Modified line
+        //response.put("topics", event.getTopics().stream().map(Topic::getName).collect(Collectors.toList()));
+
+        //response.put("topics", event.getTopics());
+
+        // Replace this line with the new one that includes topic details
+        response.put("topics", event.getTopics().stream()
+        .map(topic -> {
+            Map<String, Object> topicDetails = new HashMap<>();
+            topicDetails.put("id", topic.getTopicID());  // Now getId() should work
+            topicDetails.put("name", topic.getName());
+            return topicDetails;
+        })
+        .collect(Collectors.toList()));
+    
+        response.put("organization", event.getOrganization());
+        response.put("startTime", event.getStartTime());
+        response.put("endTime", event.getEndTime());
+        response.put("eventImage", Base64.getEncoder().encodeToString(event.getEventImage()));
+        response.put("isFree", event.isFree());
+
+        return response;
     }
 
-    Map<String, Object> response = new HashMap<>();
-    response.put("eventName", event.getEventName());
-    response.put("description", event.getDescription());
-    response.put("location", event.getLocation());
-    response.put("startDate", event.getStartDate());
-    response.put("endDate", event.getEndDate());
-    response.put("eventType", event.getEventType());
-    response.put("topics", event.getTopics().stream().map(Topic::getName).toList());
-    response.put("organization", event.getOrganization());
-    response.put("startTime", event.getStartTime());
-    response.put("endTime", event.getEndTime());
-    response.put("eventImage", Base64.getEncoder().encodeToString(event.getEventImage()));
-    response.put("isFree", event.isFree());
 
-    return response;
-}
-
-    
 
     @GetMapping("/create")
     public String showEventForm(Model model) {
@@ -125,20 +138,28 @@ public Map<String, Object> getEventDetails(@PathVariable String id) {
     // Updated method for topic-based filtering
     @GetMapping
     public String getFilteredEvents(
-        @RequestParam(value = "topic", required = false) String topic,
+        @RequestParam(value = "topic", required = false) String[] topics,
+        @RequestParam(value = "eventType", required = false) String eventType,
         Model model
     ) {
         List<Event> events;
 
-        if (topic != null && !topic.isEmpty()) {
-            events = eventService.getEventsByTopic(topic);
-        } else {
+
+        if (topics != null && topics.length > 0 && eventType != null && !eventType.isEmpty()) {
+             events = eventService.getEventsByTopicsAndEventType(Arrays.asList(topics), eventType);
+        }
+        else if (topics != null && topics.length > 0) {
+            events = eventService.getEventsByTopics(Arrays.asList(topics));
+        }
+         else if (eventType != null && !eventType.isEmpty()) {
+            events = eventService.getEventsByEventType(eventType);
+        }
+         else {
             events = eventService.getAllEvents();
         }
 
         model.addAttribute("events", events);
-        model.addAttribute("selectedTopic", topic); // To highlight the selected topic in the UI
-        return "home"; // Render the home.html template with filtered events
+        return "home"; // Return view name
     }
 
     @PostMapping("/register")
@@ -146,36 +167,36 @@ public Map<String, Object> getEventDetails(@PathVariable String id) {
     public ResponseEntity<String> registerForEvent(@RequestBody Map<String, String> request) {
         String userID = request.get("userID");
         String eventID = request.get("eventID");
-    
+
         if (userID == null || eventID == null || userID.isEmpty() || eventID.isEmpty()) {
             System.out.println("❌ ERROR: Missing or empty userID or eventID");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing or empty userID or eventID");
         }
-    
+
         Event event = eventService.getEventById(eventID);
         if (event == null) {
             System.out.println("❌ ERROR: Event not found - " + eventID);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Event not found");
         }
-    
+
         User user = userService.getUserById(userID);
         if (user == null) {
             System.out.println("❌ ERROR: User not found - " + userID);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
-    
+
         // Check if the user is already registered
         if (event.getAttendees().contains(user)) {
             System.out.println("❌ ERROR: User already registered for event - " + eventID);
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User already registered for this event.");
         }
-    
+
         // Add user to event attendees
         event.getAttendees().add(user);
-    
+
         // Save the event
         eventService.saveEvent(event);
-    
+
         return ResponseEntity.ok("User registered successfully");
     }
 
@@ -183,7 +204,7 @@ public Map<String, Object> getEventDetails(@PathVariable String id) {
     public String getEventAttendees(@PathVariable String eventID, Model model) {
         List<EventAttendeeDTO> attendees = eventRepository.getEventAttendeesWithDetails(eventID);
         model.addAttribute("attendees", attendees);
-        return "event_attendees"; 
+        return "event_attendees";
     }
 
     @GetMapping("/my-events")
@@ -207,5 +228,4 @@ public Map<String, Object> getEventDetails(@PathVariable String id) {
 
     
 
-    
 }

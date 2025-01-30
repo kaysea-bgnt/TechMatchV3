@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import appdev.com.techmatch.model.Event;
 import appdev.com.techmatch.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.time.LocalDate;
 import java.util.*;
 
@@ -50,6 +51,20 @@ public class EventService {
         List<Event> events = eventRepository.findByTopics_Name(topic);
         System.out.println("Events found for topic " + topic + ": " + events.size());
         return events;
+    }
+
+    public List<Event> getEventsByEventType(String type) {
+        return eventRepository.findByEventType(type);
+    }
+
+    public List<Event> getEventsByTopics(List<String> topics) {
+        List<Event> events = eventRepository.findByTopics_NameIn(topics);
+        System.out.println("Events found for topics " + topics + ": " + events.size());
+        return events;
+    }
+
+    public List<Event> getEventsByTopicsAndEventType(List<String> topics, String eventType) {
+        return eventRepository.findByTopicsNameInAndEventType(topics, eventType);
     }
     
     public List<Event> getEventsByDateAndType(String date, String type) {

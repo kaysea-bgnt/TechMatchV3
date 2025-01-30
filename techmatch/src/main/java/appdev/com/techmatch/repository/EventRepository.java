@@ -11,14 +11,14 @@ import java.time.LocalDate;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, String> {
+    List<Event> findByEventType(String type);
+
     List<Event> findByTopics_Name(String topic);
 
     @Query("SELECT e FROM Event e WHERE (:date IS NULL OR e.startDate <= :date AND e.endDate >= :date) AND (:type IS NULL OR e.eventType = :type)")
     List<Event> findByDateAndType(@Param("date") LocalDate date, @Param("type") String type);
 
     List<Event> findByStartDate(LocalDate date);
-
-    List<Event> findByEventType(String type);
 
     @Query("SELECT new appdev.com.techmatch.dto.EventAttendeeDTO(e.eventID, e.eventName, u.userID, u.username, u.email) " +
     "FROM Event e JOIN e.attendees u " +

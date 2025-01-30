@@ -20,8 +20,8 @@ import appdev.com.techmatch.repository.EventRepository;
 import java.io.IOException;
 import java.util.*;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
 
 
 @Controller
@@ -116,22 +116,24 @@ public Map<String, Object> getEventDetails(@PathVariable String id) {
 
     // Updated method for topic-based filtering
     @GetMapping
-    public String getFilteredEvents(
-        @RequestParam(value = "topic", required = false) String topic,
-        Model model
-    ) {
-        List<Event> events;
+        public String getFilteredEvents(
+            @RequestParam(value = "topic", required = false) String topic,
+            @RequestParam(value = "eventType", required = false) String eventType,
+            Model model
+        ) {
+            List<Event> events;
 
-        if (topic != null && !topic.isEmpty()) {
-            events = eventService.getEventsByTopic(topic);
-        } else {
-            events = eventService.getAllEvents();
+            if (topic != null && !topic.isEmpty()) {
+                events = eventService.getEventsByTopic(topic);
+            } else if (eventType != null && !eventType.isEmpty()) {
+                events = eventService.getEventsByEventType(eventType);
+            } else {
+                events = eventService.getAllEvents();
+            }
+
+            model.addAttribute("events", events);
+           return "home"; // Return view name
         }
-
-        model.addAttribute("events", events);
-        model.addAttribute("selectedTopic", topic); // To highlight the selected topic in the UI
-        return "home"; // Render the home.html template with filtered events
-    }
 
     @PostMapping("/register")
     @ResponseBody

@@ -51,6 +51,10 @@ public class EventService {
         System.out.println("Events found for topic " + topic + ": " + events.size());
         return events;
     }
+
+    public List<Event> getEventsByEventType(String type) {
+        return eventRepository.findByEventType(type);
+    }
     
     public List<Event> getEventsByDateAndType(String date, String type) {
         List<Event> events;
@@ -64,6 +68,9 @@ public class EventService {
         System.out.println("Events found for date " + date + " and type " + type + ": " + events.size());
         return events;
     }
+
+    
+    
 
     
     

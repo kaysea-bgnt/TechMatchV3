@@ -2,27 +2,37 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Event Attendees</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/attendees.css">
 </head>
 <body>
-    <h2>Event Attendees</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Event ID</th>
-                <th>User ID</th>
-                <th>Username</th>
-                <th>Email</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="attendee : ${attendees}">
-                <td th:text="${attendee.eventId}"></td>  <!-- Fix the case-sensitive issue -->
-                <td th:text="${attendee.userId}"></td>
-                <td th:text="${attendee.username}"></td>
-                <td th:text="${attendee.email}"></td>
-            </tr>                       
-        </tbody>
-    </table>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h2 class="title">Event Attendees</h2>
+                <span class="badge" th:text="${attendees[0].eventName}"></span>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Event ID</th>
+                            <th>User ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="attendee : ${attendees}">
+                            <td th:text="${attendee.eventId}"></td>
+                            <td th:text="${attendee.userId}"></td>
+                            <td th:text="${attendee.username}"></td>
+                            <td th:text="${attendee.email}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
 </html>

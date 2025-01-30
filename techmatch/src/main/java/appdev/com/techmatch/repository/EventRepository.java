@@ -20,9 +20,10 @@ public interface EventRepository extends JpaRepository<Event, String> {
 
     List<Event> findByEventType(String type);
 
-    @Query("SELECT new appdev.com.techmatch.dto.EventAttendeeDTO(e.eventID, u.userID, u.username, u.email) " +
+    @Query("SELECT new appdev.com.techmatch.dto.EventAttendeeDTO(e.eventID, e.eventName, u.userID, u.username, u.email) " +
     "FROM Event e JOIN e.attendees u " +
     "WHERE e.eventID = :eventID")
     List<EventAttendeeDTO> getEventAttendeesWithDetails(@Param("eventID") String eventID);
+
 }
 

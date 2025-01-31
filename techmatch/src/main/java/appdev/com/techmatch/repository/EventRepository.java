@@ -33,5 +33,7 @@ public interface EventRepository extends JpaRepository<Event, String> {
 
     List<Event> findByUserUserID(String userID);
 
-}
+    @Query("SELECT e FROM Event e WHERE LOWER(e.eventName) LIKE LOWER(concat('%', :searchQuery, '%')) OR LOWER(e.organization) LIKE LOWER(concat('%', :searchQuery, '%'))")
+    List<Event> findByEventNameContainingIgnoreCaseOrOrganizationContainingIgnoreCase(@Param("searchQuery") String searchQuery1, @Param("searchQuery") String searchQuery2);
 
+}

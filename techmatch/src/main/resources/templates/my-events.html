@@ -36,6 +36,9 @@
                             <td>
                                 <a th:href="@{/events/attendees/{eventID}(eventID=${event.eventID})}" class="btn btn-view">View Attendees</a>
                             </td>
+                            <td>
+                                <button class="btn btn-danger delete-event" th:data-event-id="${event.eventID}">  Delete </button>
+                            </td>   
                         </tr>
                     </tbody>
                 </table>
@@ -49,5 +52,7 @@
         </div>
     </div>
 </body>
+<script src="/my-event.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+
 </html>

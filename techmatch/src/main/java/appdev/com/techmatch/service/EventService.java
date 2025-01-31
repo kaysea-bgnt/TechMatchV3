@@ -3,6 +3,8 @@ package appdev.com.techmatch.service;
 import org.springframework.stereotype.Service;
 import appdev.com.techmatch.model.Event;
 import appdev.com.techmatch.repository.EventRepository;
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
@@ -83,8 +85,19 @@ public class EventService {
     public List<Event> getEventsByUserID(String userID) {
         return eventRepository.findByUserUserID(userID);
     }
-    
+<<<<<<< HEAD
 
+    @Transactional
+    public void deleteEvent(String eventID) {
+        eventRepository.deleteById(eventID);
+    }
+    
+=======
+>>>>>>> 45df372fbcf35b29d4ee4488c303016840dd7a07
+
+    public List<Event> searchEvents(String searchQuery) {
+        return eventRepository.findByEventNameContainingIgnoreCaseOrOrganizationContainingIgnoreCase(searchQuery, searchQuery);
+    }
     
     
 }

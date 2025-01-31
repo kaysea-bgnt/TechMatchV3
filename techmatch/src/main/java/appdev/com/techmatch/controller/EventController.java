@@ -134,16 +134,20 @@ public class EventController {
 
 
     // Updated method for topic-based filtering
-    @GetMapping
+  @GetMapping
     public String getFilteredEvents(
         @RequestParam(value = "topic", required = false) String[] topics,
         @RequestParam(value = "eventType", required = false) String eventType,
+          @RequestParam(value = "search", required = false) String searchQuery,
         Model model
     ) {
         List<Event> events;
 
 
-        if (topics != null && topics.length > 0 && eventType != null && !eventType.isEmpty()) {
+    if (searchQuery != null && !searchQuery.isEmpty()) {
+        events = eventService.searchEvents(searchQuery);
+    }
+    else if (topics != null && topics.length > 0 && eventType != null && !eventType.isEmpty()) {
              events = eventService.getEventsByTopicsAndEventType(Arrays.asList(topics), eventType);
         }
         else if (topics != null && topics.length > 0) {
@@ -155,7 +159,6 @@ public class EventController {
          else {
             events = eventService.getAllEvents();
         }
-
         model.addAttribute("events", events);
         return "home"; // Return view name
     }
@@ -221,9 +224,35 @@ public class EventController {
         
         return "my-events"; // This will be your HTML page displaying user-created events
     }
+<<<<<<< HEAD
+
+    @DeleteMapping("/delete/{eventID}")
+    @ResponseBody
+    public ResponseEntity<String> deleteEvent(@PathVariable String eventID, HttpSession session) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+    
+        if (loggedInUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in.");
+        }
+    
+        Event event = eventService.getEventById(eventID);
+        if (event == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Event not found.");
+        }
+    
+        // Ensure only the creator can delete the event
+        if (!event.getUser().getUserID().equals(loggedInUser.getUserID())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this event.");
+        }
+    
+        eventService.deleteEvent(eventID);
+        return ResponseEntity.ok("Event deleted successfully.");
+    } 
     
     
 
     
 
+=======
+>>>>>>> 45df372fbcf35b29d4ee4488c303016840dd7a07
 }

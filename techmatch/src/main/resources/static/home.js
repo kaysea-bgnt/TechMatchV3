@@ -1,5 +1,8 @@
 let currentEventID = null; // Store the current event ID
 let userID = null; // Store the current user ID
+let allEvents = []; // Store all events fetched from the server
+let lastSearchQuery = "";
+
 
 // Fetch user details when the page loads
 document.addEventListener("DOMContentLoaded", async () => {
@@ -22,12 +25,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Setup filter functionality after DOM is ready
     setupFilterFunctionality();
+
+    // Setup search functionality after DOM is ready
+    setupSearchFunctionality();
 });
 
 
 // Function to attach click event listeners to event cards
 function attachEventListeners() {
-    const eventContainer = document.querySelector('.row.row-cols-1.row-cols-md-3.g-4');
+    const eventContainer = document.querySelector('.row.row-cols-1.row-cols-md-3.g-4'); // Correct selector for popups
 
     eventContainer.addEventListener('click', function(event) {
         const card = event.target.closest('.event-card');
@@ -52,9 +58,9 @@ function attachEventListeners() {
                 }
 
                 // Populate modal with event details
-                 document.getElementById("eventTitle").textContent = event.eventName || "N/A";
-                 document.getElementById("eventDescription").textContent = event.description || "N/A";
-                  document.getElementById("eventLocation").textContent = event.location || "N/A";
+                document.getElementById("eventTitle").textContent = event.eventName || "N/A";
+                document.getElementById("eventDescription").textContent = event.description || "N/A";
+                document.getElementById("eventLocation").textContent = event.location || "N/A";
                 document.getElementById("eventDate").textContent = (event.startDate && event.endDate) ? `${event.startDate} to ${event.endDate}` : "N/A";
 
 
@@ -81,19 +87,20 @@ function attachEventListeners() {
                     }
                   }
 
+                // Populate modal with event details
                 document.getElementById("eventTime").textContent = (event.startTime && event.endTime) ? `${formatTime(event.startTime)} - ${formatTime(event.endTime)}` : "N/A";
 
-
+                // Populate modal with event details
                 document.getElementById("eventType").textContent = event.eventType || "N/A";
                  // Correctly populating the topics using javascript, and that the data is an array
-                 const eventTopicsElement = document.getElementById("eventTopics");
-                  eventTopicsElement.textContent = ""; // Clear the HTML before setting it
-                 eventTopicsElement.textContent = (event.topics && Array.isArray(event.topics) && event.topics.length > 0) ? event.topics.map(topic => topic.name).join(", ") : "N/A";
+                    const eventTopicsElement = document.getElementById("eventTopics");
+                    eventTopicsElement.textContent = ""; // Clear the HTML before setting it
+                    eventTopicsElement.textContent = (event.topics && Array.isArray(event.topics) && event.topics.length > 0) ? event.topics.map(topic => topic.name).join(", ") : "N/A";
 
-
-                 document.getElementById("eventOrganizer").textContent = event.organization || "N/A";
-                 document.getElementById("eventCapacity").textContent = event.capacity || "N/A";
-                 document.getElementById("eventIsFree").textContent = (event.isFree === true || event.isFree === "true") ? "Yes" : "No";
+                // Populate modal with event details
+                document.getElementById("eventOrganizer").textContent = event.organization || "N/A";
+                document.getElementById("eventCapacity").textContent = event.capacity || "N/A";
+                document.getElementById("eventIsFree").textContent = (event.isFree === true || event.isFree === "true") ? "Yes" : "No";
 
                 // Reset Register button state
                 let registerButton = document.getElementById("registerButton");
@@ -234,4 +241,59 @@ function setupFilterFunctionality() {
     // Event listeners
     applyFilterButton.addEventListener("click", loadFilteredEvents);
     resetFilterButton.addEventListener("click", resetFilters);
+}
+
+
+// SEARCH BAR FUNCTIONALITY
+function setupSearchFunctionality() {
+    const searchInput = document.getElementById('searchInput');
+    const searchForm = document.getElementById('searchForm');
+
+    // Function to handle search submission
+    function handleSearch(event) {
+        event.preventDefault(); // Prevent form submission
+        const query = searchInput.value.trim();
+        if (query) {
+            window.location.href = `/events?search=${query}`;
+        } else {
+            window.location.href = `/events`;
+        }
+    }
+
+    // Submit event listener for the search form (Only triggers on Enter)
+    searchForm.addEventListener("submit", handleSearch);
+}
+
+
+function updateEventCards(events) {
+    const eventContainer = document.getElementById('event-container');
+    eventContainer.innerHTML = ''; // Clear existing cards
+
+    if(events.length === 0){
+         const noEventsMessage = document.createElement('div');
+         noEventsMessage.classList.add('col-12', 'text-center', 'text-white');
+         noEventsMessage.innerHTML = "<h3>No events found with this search term.</h3>";
+         eventContainer.appendChild(noEventsMessage);
+        return;
+    }
+
+    events.forEach(event => {
+        const eventCard = document.createElement('div');
+        eventCard.classList.add('col');
+        eventCard.innerHTML = `
+        <div class="card h-100 event-card" data-event-id="${event.eventID}">
+                <img src="data:image/jpeg;base64,${event.base64Image}" class="card-img-top" alt="Event Image">
+              <div class="card-body">
+                <h5 class="card-title">${event.eventName}</h5>
+                <p class="card-text"><strong>Topic:</strong> 
+                    ${event.topics.map(topic => topic.name).join(', ')}
+                </p>
+                <p class="card-text"><strong>Type:</strong> ${event.eventType}</p>
+                 <p class="card-text"><strong>Date:</strong> ${event.startDate} to ${event.endDate}</p>
+                <p class="card-text"><strong>Capacity:</strong> ${event.capacity}</p>
+              </div>
+            </div>
+        `;
+        eventContainer.appendChild(eventCard);
+    });
 }

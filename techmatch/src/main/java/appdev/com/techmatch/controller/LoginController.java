@@ -2,6 +2,7 @@ package appdev.com.techmatch.controller;
 
 import appdev.com.techmatch.model.Event;
 import appdev.com.techmatch.model.User;
+import appdev.com.techmatch.repository.EventRepository;
 import appdev.com.techmatch.service.AuthService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
-import appdev.com.techmatch.service.EventService;
+import java.time.LocalDate;
 import java.util.*;
 
 @Controller
@@ -20,7 +21,7 @@ public class LoginController {
     private AuthService authService;
 
     @Autowired
-    private EventService eventService;
+    private EventRepository eventRepository;
 
     @GetMapping("/login")
     public String loginPage() {
@@ -52,10 +53,12 @@ public class LoginController {
             return "redirect:/login";
         }
 
+        LocalDate today = LocalDate.now();
+
         //fetch all events
         List<Event> events;
         try {
-            events = eventService.getAllEvents();
+             events = eventRepository.findByEndDateAfterOrEndDateEquals(today);
         } catch (Exception e) {
             events = Collections.emptyList(); // Use an empty list if an error occurs
             System.err.println("Error fetching events: " + e.getMessage());

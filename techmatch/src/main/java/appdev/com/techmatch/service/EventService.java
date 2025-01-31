@@ -43,8 +43,14 @@ public class EventService {
     
 
     private String generateCustomEventID() {
-        long count = eventRepository.count();
-        return String.format("EVENT-%05d", count + 1);
+        String lastEventID = eventRepository.findMaxEventID();
+        if (lastEventID == null) {
+            return "EVENT-00001";
+        }
+
+            // Extract numeric part
+        int lastNumber = Integer.parseInt(lastEventID.replace("EVENT-", ""));
+        return String.format("EVENT-%05d", lastNumber + 1);
     }
 
     public List<Event> getAllEvents() {

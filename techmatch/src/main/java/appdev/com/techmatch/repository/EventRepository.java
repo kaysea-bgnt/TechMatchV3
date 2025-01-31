@@ -54,6 +54,14 @@ public interface EventRepository extends JpaRepository<Event, String> {
     @Query("SELECT e FROM Event e JOIN e.topics t WHERE t.name IN :topics AND e.startDate = :date")
     List<Event> findByTopicsNameInAndStartDate(@Param("topics") List<String> topics, @Param("date") LocalDate date);
 
+    @Query("SELECT e FROM Event e WHERE e.endDate >= :today")
+    List<Event> findByEndDateAfterOrEndDateEquals(@Param("today") LocalDate today);
+
+    @Query("SELECT MAX(e.eventID) FROM Event e")
+    String findMaxEventID();
+
+    
+
    
 
 }

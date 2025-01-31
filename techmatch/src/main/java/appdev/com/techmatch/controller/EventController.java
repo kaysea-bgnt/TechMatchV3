@@ -224,7 +224,6 @@ public class EventController {
         
         return "my-events"; // This will be your HTML page displaying user-created events
     }
-<<<<<<< HEAD
 
     @DeleteMapping("/delete/{eventID}")
     @ResponseBody
@@ -248,11 +247,93 @@ public class EventController {
         eventService.deleteEvent(eventID);
         return ResponseEntity.ok("Event deleted successfully.");
     } 
+
+    @GetMapping("/edit/{eventID}")
+    public String editEvent(@PathVariable String eventID, Model model, HttpSession session) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/login"; // Redirect if not logged in
+        }
+    
+        Event event = eventService.getEventById(eventID);
+        if (event == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
+        }
+    
+        // Ensure only the creator can edit
+        if (!event.getUser().getUserID().equals(loggedInUser.getUserID())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Unauthorized to edit this event.");
+        }
+
+        List<Topic> allTopics = topicRepository.findAll(); // Get all available topics
+    
+        model.addAttribute("event", event);
+        model.addAttribute("allTopics", allTopics);
+        return "edit-event";
+    }
+
+    @PostMapping("/update")
+    public String updateEvent(
+        @ModelAttribute Event updatedEvent,
+        @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+        @RequestParam("eventTopics") List<String> eventTopics,
+        HttpSession session ) throws IOException {
+    User loggedInUser = (User) session.getAttribute("loggedInUser");
+
+    if (loggedInUser == null) {
+        return "redirect:/login"; // Redirect if not logged in
+    }
+
+    Event existingEvent = eventService.getEventById(updatedEvent.getEventID());
+    if (existingEvent == null) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
+    }
+
+    // Ensure only the event creator can update it
+    if (!existingEvent.getUser().getUserID().equals(loggedInUser.getUserID())) {
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Unauthorized to update this event.");
+    }
+
+    // Update the event fields
+    existingEvent.setEventName(updatedEvent.getEventName());
+    existingEvent.setDescription(updatedEvent.getDescription());
+    existingEvent.setLocation(updatedEvent.getLocation());
+    existingEvent.setStartDate(updatedEvent.getStartDate());
+    existingEvent.setEndDate(updatedEvent.getEndDate());
+    existingEvent.setStartTime(updatedEvent.getStartTime());
+    existingEvent.setEndTime(updatedEvent.getEndTime());
+    existingEvent.setOrganization(updatedEvent.getOrganization());
+    existingEvent.setFree(updatedEvent.isFree());
+    existingEvent.setCapacity(updatedEvent.getCapacity());
+    existingEvent.setEventType(updatedEvent.getEventType());
+
+    // Update topics
+    Set<Topic> updatedTopics = new HashSet<>();
+    for (String topicName : eventTopics) {
+        Topic topic = topicRepository.findByName(topicName);
+        if (topic == null) {
+            topic = new Topic();
+            topic.setName(topicName);
+            topicRepository.save(topic);
+        }
+        updatedTopics.add(topic);
+    }
+    existingEvent.setTopics(updatedTopics);
+    
+    // Handle image upload
+    if (imageFile != null && !imageFile.isEmpty()) {
+        existingEvent.setEventImage(imageFile.getBytes());
+    }
+
+    eventService.saveEvent(existingEvent); // Save the updated event
+
+    return "redirect:/events/my-events"; // Redirect back to user events page
+}
+
+    
     
     
 
     
 
-=======
->>>>>>> 45df372fbcf35b29d4ee4488c303016840dd7a07
 }

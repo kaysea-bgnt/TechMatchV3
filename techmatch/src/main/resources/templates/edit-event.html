@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Event</title>
+    <link rel="stylesheet" href="/edit.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Edit Event</h2>
+        <form id="editEventForm" th:action="@{/events/update}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="eventID" th:value="${event.eventID}">
+            
+            <div class="form-group">
+                <label for="eventName">Event Name:</label>
+                <input type="text" id="eventName" name="eventName" th:value="${event.eventName}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="imageFile">Event Image:</label>
+                <input type="file" id="imageFile" name="imageFile">
+                <div th:if="${event.eventImage}">
+                  <p>Current Image:</p>
+                  <img th:src="'data:image/jpeg;base64,' + ${event.getBase64Image()}" alt="Event Image" style="max-width: 100%; border-radius: 5px;">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required th:text="${event.description}"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" th:value="${event.location}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="eventType">Event Type:</label>
+                <select id="eventType" name="eventType" required>
+                    <option value="Hackathon" th:selected="${event.eventType == 'Hackathon'}">Hackathon</option>
+                    <option value="Networking" th:selected="${event.eventType == 'Networking'}">Networking</option>
+                    <option value="Workshop" th:selected="${event.eventType == 'Workshop'}">Workshop</option>
+                    <option value="Seminar" th:selected="${event.eventType == 'Seminar'}">Seminar</option>
+                    <option value="Webinar" th:selected="${event.eventType == 'Webinar'}">Webinar</option>
+                    <option value="Study Session" th:selected="${event.eventType == 'Study Session'}">Study Session</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="eventTopics">Event Topics:</label>
+                <div class="checkbox-group">
+                    <div th:each="topic : ${allTopics}">
+                        <input type="checkbox" th:id="'topic' + ${topic.name}" name="eventTopics" th:value="${topic.name}"
+                               th:checked="${event.topics.![name].contains(topic.name)}">
+                        <label th:for="'topic' + ${topic.name}" th:text="${topic.name}"></label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate" name="startDate" th:value="${event.startDate}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="endDate">End Date:</label>
+                <input type="date" id="endDate" name="endDate" th:value="${event.endDate}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="startTime">Start Time:</label>
+                <input type="time" id="startTime" name="startTime" th:value="${event.startTime}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="endTime">End Time:</label>
+                <input type="time" id="endTime" name="endTime" th:value="${event.endTime}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="organization">Organization:</label>
+                <input type="text" id="organization" name="organization" th:value="${event.organization}" required>
+              </div>
+          
+            <div class="form-group">
+                <label for="isFree">Tickets Free?</label>
+                <select id="isFree" name="isFree">
+                  <option value="true" th:selected="${event.isFree}">Yes</option>
+                  <option value="false" th:selected="${!event.isFree}">No</option>
+                </select>
+            </div>
+          
+            <div class="form-group">
+                <label for="capacity">Capacity:</label>
+                <input type="number" id="capacity" name="capacity" th:value="${event.capacity}" required>
+            </div>
+          
+            <button type="submit" class="btn btn-primary">Update Event</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -30,3 +30,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const editButtons = document.querySelectorAll(".edit-event");
+
+    editButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const eventID = this.getAttribute("data-event-id");
+            window.location.href = `/events/edit/${eventID}`;
+        });
+    });
+});

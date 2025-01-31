@@ -1,12 +1,15 @@
 package appdev.com.techmatch.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import appdev.com.techmatch.model.Event;
 import appdev.com.techmatch.repository.EventRepository;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -85,18 +88,39 @@ public class EventService {
     public List<Event> getEventsByUserID(String userID) {
         return eventRepository.findByUserUserID(userID);
     }
-<<<<<<< HEAD
 
     @Transactional
     public void deleteEvent(String eventID) {
         eventRepository.deleteById(eventID);
     }
     
-=======
->>>>>>> 45df372fbcf35b29d4ee4488c303016840dd7a07
 
     public List<Event> searchEvents(String searchQuery) {
         return eventRepository.findByEventNameContainingIgnoreCaseOrOrganizationContainingIgnoreCase(searchQuery, searchQuery);
+    }
+    
+    public Event updateEvent(Event updatedEvent, MultipartFile imageFile) throws IOException {
+        Event existingEvent = eventRepository.findById(updatedEvent.getEventID())
+            .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+    
+        // Update fields
+        existingEvent.setEventName(updatedEvent.getEventName());
+        existingEvent.setDescription(updatedEvent.getDescription());
+        existingEvent.setLocation(updatedEvent.getLocation());
+        existingEvent.setStartDate(updatedEvent.getStartDate());
+        existingEvent.setEndDate(updatedEvent.getEndDate());
+        existingEvent.setStartTime(updatedEvent.getStartTime());
+        existingEvent.setEndTime(updatedEvent.getEndTime());
+        existingEvent.setOrganization(updatedEvent.getOrganization());
+        existingEvent.setFree(updatedEvent.isFree());
+        existingEvent.setCapacity(updatedEvent.getCapacity());
+    
+        // If a new image is provided, update it
+        if (imageFile != null && !imageFile.isEmpty()) {
+            existingEvent.setEventImage(imageFile.getBytes());
+        }
+    
+        return eventRepository.save(existingEvent);
     }
     
     

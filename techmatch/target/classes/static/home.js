@@ -162,15 +162,19 @@ document.getElementById("registerButton").addEventListener("click", function () 
             if (response.ok) {
                 alert("Successfully registered for the event!");
                 let registerButton = document.getElementById("registerButton");
-                registerButton.textContent = "Pending Approval";
+                registerButton.textContent = "Registered";
                 registerButton.classList.remove("btn-primary");
                 registerButton.classList.add("btn-success");
                 registerButton.disabled = true;
-            } else {
-                alert("Pending approval!");
-                registerButton.textContent = "Pending Approval";
-                registerButton.disabled = true;
 
+                let capacityElement = document.getElementById("eventCapacity");
+                let capacity = parseInt(capacityElement.textContent);
+                capacityElement.textContent = capacity - 1;
+
+            } else {
+                alert("Already Registered!");
+                registerButton.textContent = "Registered";
+                registerButton.disabled = true;
             }
         })
         .catch((error) => {

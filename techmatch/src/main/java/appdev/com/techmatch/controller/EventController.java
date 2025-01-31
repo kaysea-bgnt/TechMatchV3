@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpSession;
 import appdev.com.techmatch.repository.TopicRepository;
 import appdev.com.techmatch.service.UserService;
 import appdev.com.techmatch.repository.EventRepository;
+import appdev.com.techmatch.repository.UserRepository;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,6 +39,9 @@ public class EventController {
 
     @Autowired
     private EventRepository eventRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/create")
     public String createEvent(
@@ -211,8 +215,16 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User already registered for this event.");
         }
 
+        // Check if event still has capacity left
+        if (event.getCapacity() <= 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Event is full. Cannot register.");
+        }
+
         // Add user to event attendees
         event.getAttendees().add(user);
+
+        // Reduce event capacity by 1
+        event.setCapacity(event.getCapacity() - 1);
 
         // Save the event
         eventService.saveEvent(event);
@@ -379,6 +391,10 @@ public ResponseEntity<String> deleteAttendee(
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Attendee not found.");
     }
 }
+
+
+
+
 
 
     

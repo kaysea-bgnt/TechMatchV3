@@ -47,8 +47,7 @@
     
 <header class="header">
     <div class="logo">TechMatch</div>
-     <h3>Welcome, <span th:text="${username}"></span>!</h3>
-    <h3>Welcome, <span th:text="${email}"></span>!</h3>
+     <h5>Welcome, <span th:text="${username}"></span>!</h5>
     <form id="searchForm" class="search-bar">
         <input type="text" id="searchInput" placeholder="Search..." class="form-control">
         <button type="submit" style="display: none;"></button>
@@ -200,7 +199,7 @@
                         
 
                         <p><strong>Organizer:</strong> <span id="eventOrganizer"></span></p>
-                        <p><strong>Capacity:</strong> <span id="eventCapacity"></span></p>
+                        <p><strong>Remaining Slots: </strong> <span id="eventCapacity"></span></p>
                         <p><strong>Is ticket free? </strong> <span id="eventIsFree"></span></p>
                         
                     </div>

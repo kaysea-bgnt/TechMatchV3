@@ -104,6 +104,7 @@ public class EventController {
         response.put("startDate", event.getStartDate());
         response.put("endDate", event.getEndDate());
         response.put("eventType", event.getEventType());
+        response.put("user", event.getUser());
 
         response.put("topics", event.getTopics().stream()
         .map(topic -> {
@@ -170,7 +171,6 @@ public class EventController {
         String eventID = request.get("eventID");
 
         if (userID == null || eventID == null || userID.isEmpty() || eventID.isEmpty()) {
-            System.out.println("❌ ERROR: Missing or empty userID or eventID");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing or empty userID or eventID");
         }
 
@@ -184,6 +184,11 @@ public class EventController {
         if (user == null) {
             System.out.println("❌ ERROR: User not found - " + userID);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        // Prevent the event creator from registering
+        if (event.getUser().getUserID().equals(userID)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You cannot register for your own event.");
         }
 
         // Check if the user is already registered
@@ -319,7 +324,7 @@ public class EventController {
         updatedTopics.add(topic);
     }
     existingEvent.setTopics(updatedTopics);
-    
+
     // Handle image upload
     if (imageFile != null && !imageFile.isEmpty()) {
         existingEvent.setEventImage(imageFile.getBytes());

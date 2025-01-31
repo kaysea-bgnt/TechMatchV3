@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Function to attach click event listeners to event cards
 function attachEventListeners() {
-    const eventContainer = document.querySelector('.row.row-cols-1.row-cols-md-3.g-4'); // Correct selector for popups
+    const eventContainer = document.querySelector('.row.row-cols-1.row-cols-md-3.g-4');
 
     eventContainer.addEventListener('click', function(event) {
         const card = event.target.closest('.event-card');
@@ -52,8 +52,8 @@ function attachEventListeners() {
         fetch(`/events/${currentEventID}`)
             .then((response) => response.json())
             .then((event) => {
-                if (!event) {
-                    console.error("Event not found");
+                if (!event || !event.user) {
+                    console.error("Event or creator details are missing.");
                     return;
                 }
 
@@ -104,10 +104,21 @@ function attachEventListeners() {
 
                 // Reset Register button state
                 let registerButton = document.getElementById("registerButton");
-                registerButton.textContent = "Register";
-                registerButton.classList.add("btn-primary");
-                registerButton.classList.remove("btn-success");
-                registerButton.disabled = false;
+
+                // Check if the logged-in user is the event creator
+                if (event.user.userID === userID) {
+                    console.log("User is the creator, disabling Register button.");
+                    registerButton.textContent = "You are the organizer";
+                    registerButton.classList.add("btn-secondary");
+                    registerButton.classList.remove("btn-primary");
+                    registerButton.disabled = true;
+                } else {
+                    console.log("User is NOT the creator, enabling Register button.");
+                    registerButton.textContent = "Register";
+                    registerButton.classList.add("btn-primary");
+                    registerButton.classList.remove("btn-secondary");
+                    registerButton.disabled = false;
+                }
 
                 // Show the modal
                 let eventModal = new bootstrap.Modal(document.getElementById("eventDetailModal"));
@@ -126,7 +137,17 @@ document.getElementById("registerButton").addEventListener("click", function () 
         return;
     }
 
-    console.log("Registering user for event:", { userID, eventID: currentEventID });
+     // Fetch event details to check if the user is the creator
+     fetch(`/events/${currentEventID}`)
+     .then(response => response.json())
+     .then(event => {
+         if (event.user && event.user.userID === userID) {
+             alert("You cannot register for your own event.");
+             return;
+         }
+
+    // Proceed with registration if not the creator
+     console.log("Registering user for event:", { userID, eventID: currentEventID });
 
     fetch(`/events/register`, {
         method: "POST",
@@ -151,6 +172,7 @@ document.getElementById("registerButton").addEventListener("click", function () 
             console.error("Error registering user for event:", error);
             alert("Failed to register for the event. Please try again later.");
         });
+    });
 });
 
 

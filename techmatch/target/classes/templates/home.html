@@ -64,37 +64,47 @@
 
 <body>
 
-    <main class="container mt-5">   
-        <!-- Buttons for Event Topics -->
 
-        <!-- Buttons for Event Topics -->
-        <!-- Submit a GET request to /events with the corresponding topic as a query parameter. -->
-        <div class="mb-3 text-white">
-            <p>Filter by Event Topics:</p>
-            <button class="btn btn-light topic-button" data-topic="Academics" id="topic1" >Academics</button>
-            <button class="btn btn-light topic-button" data-topic="Application Development" id="topic2">Application Development</button>
-            <button class="btn btn-light topic-button" data-topic="Blockchain" id="topic3">Blockchain</button>
-            <button class="btn btn-light topic-button" data-topic="Career and Professional Development" id="topic4">Career and Professional Development</button>
-            <button class="btn btn-light topic-button" data-topic="Cloud Computing" id="topic5">Cloud Computing</button>
-            <button class="btn btn-light topic-button" data-topic="Cybersecurity" id="topic6">Cybersecurity</button>
-            <button class="btn btn-light topic-button" data-topic="Data Science and Data Analytics" id="topic7">Data Science and Data Analytics</button>
-            <button class="btn btn-light topic-button" data-topic="Game Development" id="topic8">Game Development</button>
-            <button class="btn btn-light topic-button" data-topic="Internet of Things (IoT)" id="topic9">Internet of Things (IoT)</button>
-            <button class="btn btn-light topic-button" data-topic="Machine Learning and Artificial Intelligence" id="topic10">Machine Learning and Artificial Intelligence</button>
-            <button class="btn btn-light topic-button" data-topic="Networking and Infrastructure" id="topic11">Networking and Infrastructure</button>
-            <button class="btn btn-light topic-button" data-topic="Product and Project Management" id="topic12">Product and Project Management</button>
-            <button class="btn btn-light topic-button" data-topic="Programming and Development" id="topic13">Programming and Development</button>
-            <button class="btn btn-light topic-button" data-topic="Tech Culture and Social Impact" id="topic14">Tech Culture and Social Impact</button>
-            <button class="btn btn-light topic-button" data-topic="Tools and Frameworks" id="topic15">Tools and Frameworks</button>
-            <button class="btn btn-light topic-button" data-topic="UI/UX" id="topic16">UI/UX</button>
-            <button class="btn btn-light topic-button" data-topic="Others" id="topic17">Others</button>
+<!-- Filter Section -->
+<div class="container mt-5">
+    <div class="filter-container">
+        <!-- Left Side Filters -->
+        <div class="left-filters">
+            <!-- Topics Section with Arrows -->
+            <div class="mb-4 text-white">
+                <p>Filter by Event Topics:</p>
+                <div class="topics-scroll-container">
+                    <button id="scrollLeft" class="scroll-arrow left">&lt;</button>
+                    <div class="topics-wrapper">
+                        <div class="topics-row">
+                            <!-- Your existing topic buttons -->
+                    <button class="btn btn-light topic-button" data-topic="Academics">Academics</button>
+                    <button class="btn btn-light topic-button" data-topic="Application Development">Application Development</button>
+                    <button class="btn btn-light topic-button" data-topic="Blockchain">Blockchain</button>
+                    <button class="btn btn-light topic-button" data-topic="Career and Professional Development">Career and Professional Development</button>
+                    <button class="btn btn-light topic-button" data-topic="Cloud Computing">Cloud Computing</button>
+                    <button class="btn btn-light topic-button" data-topic="Cybersecurity">Cybersecurity</button>
+                    <button class="btn btn-light topic-button" data-topic="Data Science and Data Analytics">Data Science and Data Analytics</button>
+                    <button class="btn btn-light topic-button" data-topic="Game Development">Game Development</button>
+                    <button class="btn btn-light topic-button" data-topic="Internet of Things (IoT)">Internet of Things (IoT)</button>
+                    <button class="btn btn-light topic-button" data-topic="Machine Learning and Artificial Intelligence">Machine Learning and AI</button>
+                    <button class="btn btn-light topic-button" data-topic="Networking and Infrastructure">Networking and Infrastructure</button>
+                    <button class="btn btn-light topic-button" data-topic="Product and Project Management">Product and Project Management</button>
+                    <button class="btn btn-light topic-button" data-topic="Programming and Development">Programming and Development</button>
+                    <button class="btn btn-light topic-button" data-topic="Tech Culture and Social Impact">Tech Culture and Social Impact</button>
+                    <button class="btn btn-light topic-button" data-topic="Tools and Frameworks">Tools and Frameworks</button>
+                    <button class="btn btn-light topic-button" data-topic="UI/UX">UI/UX</button>
+                    <button class="btn btn-light topic-button" data-topic="Others">Others</button>
+                </div>
+            </div>
+            <button id="scrollRight" class="scroll-arrow right">&gt;</button>
         </div>
+    </div>
 
-
-    
-        <!-- Event Filtering SECTION HERE-->
-        <div class="mb-3 text-white">
-            <label for="eventTypeFilter" class="form-label">Filter by Event Type:</label>
+    <!-- Event Type Filter -->
+    <div class="event-type-filter text-white">
+        <label for="eventTypeFilter" class="form-label">Filter by Event Type:</label>
+        <div class="d-flex gap-2">
             <select class="form-select" id="eventTypeFilter">
                 <option value="">All Event Types</option>
                 <option value="Hackathon">Hackathon</option>
@@ -103,11 +113,45 @@
                 <option value="Seminar">Seminar</option>
                 <option value="Webinar">Webinar</option>
                 <option value="Study Session">Study Session</option>
-                <!-- Add more types if needed based on your db-->
             </select>
-            <button id="applyFilter">Apply Filter</button>
-            <button id="resetFilter">Reset Filter</button>
         </div>
+        <!-- Filter Buttons -->
+        <div class="filter-buttons mt-3">
+            <button id="applyFilter" class="btn btn-warning">Apply Filter</button>
+            <button id="resetFilter" class="btn btn-secondary">Reset Filter</button>
+        </div>
+    </div>
+</div>
+
+<!-- Right Side Date Filter -->
+<div class="right-filters">
+    <div class="date-filter text-white">
+        <div class="mb-3 text-white">
+            <label class="form-label">Filter by Date:</label>
+            <div class="date-picker-container">
+                <div class="date-picker-header">
+                    <button id="prevMonth" class="month-nav">&lt;</button>
+                    <span id="currentMonthYear"></span>
+                    <button id="nextMonth" class="month-nav">&gt;</button>
+                </div>
+                <div class="weekdays-container">
+                    <div>Su</div>
+                    <div>Mo</div>
+                    <div>Tu</div>
+                    <div>We</div>
+                    <div>Th</div>
+                    <div>Fr</div>
+                    <div>Sa</div>
+                </div> 
+                <div id="daysContainer" class="days-container"></div>
+                <input type="hidden" id="selectedDate" name="selectedDate" th:value="${selectedDate}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
         
 
         <!-- Event Section -->
@@ -116,7 +160,7 @@
 
         <div class="row row-cols-1 row-cols-md-3 g-4">
             <div th:if="${events.isEmpty()}" class="col-12 text-center text-white">
-                <h3>No events found for the selected topic.</h3>
+                <h3>No events found for the selected filter.</h3>
             </div>
             <div th:each="event : ${events}" class="col">
                 <div class="card h-100 event-card" th:attr="data-event-id=${event.eventID}">
@@ -133,6 +177,9 @@
                 </div>
             </div>
         </div>
+
+
+        
 
         <!-- Event Details Modal -->
         <div class="modal fade" id="eventDetailModal" tabindex="-1" aria-labelledby="eventDetailModalLabel" aria-hidden="true">

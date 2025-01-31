@@ -134,16 +134,20 @@ public class EventController {
 
 
     // Updated method for topic-based filtering
-    @GetMapping
+  @GetMapping
     public String getFilteredEvents(
         @RequestParam(value = "topic", required = false) String[] topics,
         @RequestParam(value = "eventType", required = false) String eventType,
+          @RequestParam(value = "search", required = false) String searchQuery,
         Model model
     ) {
         List<Event> events;
 
 
-        if (topics != null && topics.length > 0 && eventType != null && !eventType.isEmpty()) {
+    if (searchQuery != null && !searchQuery.isEmpty()) {
+        events = eventService.searchEvents(searchQuery);
+    }
+    else if (topics != null && topics.length > 0 && eventType != null && !eventType.isEmpty()) {
              events = eventService.getEventsByTopicsAndEventType(Arrays.asList(topics), eventType);
         }
         else if (topics != null && topics.length > 0) {
@@ -155,7 +159,6 @@ public class EventController {
          else {
             events = eventService.getAllEvents();
         }
-
         model.addAttribute("events", events);
         return "home"; // Return view name
     }
@@ -221,6 +224,7 @@ public class EventController {
         
         return "my-events"; // This will be your HTML page displaying user-created events
     }
+<<<<<<< HEAD
 
     @DeleteMapping("/delete/{eventID}")
     @ResponseBody
@@ -249,4 +253,6 @@ public class EventController {
 
     
 
+=======
+>>>>>>> 45df372fbcf35b29d4ee4488c303016840dd7a07
 }

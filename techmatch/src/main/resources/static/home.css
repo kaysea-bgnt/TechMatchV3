@@ -3,6 +3,34 @@ body {
     color: #ffffff;
 }
 
+/* New search bar styling */
+.search-bar {
+    flex: 1;
+    max-width: 500px;
+    min-width: 200px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid #444;
+    border-radius: 20px;
+    background-color: #2d2d2d;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.search-bar input::placeholder {
+    color: #888;
+}
+
+.search-bar input:focus {
+    outline: none;
+    border-color: #FFD700;
+    box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+}
+
+
 .header {
     display: flex;
     justify-content: space-between;

@@ -45,22 +45,22 @@
     </style>
 
     
-</head>
-    <header class="header">
-        <div class="logo">TechMatch</div>
-        <h3>Welcome, <span th:text="${username}"></span>!</h3>
-        <h3>Welcome, <span th:text="${email}"></span>!</h3>
-        <div class="search-bar">
-            <input type="text" placeholder="Search..." class="form-control">
-        </div>
-        <div class="nav-items">
-            <button class="btn btn-warning" onclick="location.href='/events/my-events'">created events</button>
-            <button class="btn btn-warning" onclick="location.href='/create'">+ Create Event</button> <br>
-            <form action="/logout" method="post">
-                <button type="submit" class="btn btn-warning">Logout</button>
-            </form>
-        </div>
-    </header>
+<header class="header">
+    <div class="logo">TechMatch</div>
+     <h3>Welcome, <span th:text="${username}"></span>!</h3>
+    <h3>Welcome, <span th:text="${email}"></span>!</h3>
+    <form id="searchForm" class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search..." class="form-control">
+        <button type="submit" style="display: none;"></button>
+    </form>
+    <div class="nav-items">
+        <button class="btn btn-warning" onclick="location.href='/events/my-events'">created events</button>
+        <button class="btn btn-warning" onclick="location.href='/create'">+ Create Event</button> <br>
+        <form action="/logout" method="post">
+            <button type="submit" class="btn btn-warning">Logout</button>
+        </form>
+    </div>
+</header>
 
 <body>
 

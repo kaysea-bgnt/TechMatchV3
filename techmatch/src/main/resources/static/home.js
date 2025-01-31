@@ -172,8 +172,8 @@ document.getElementById("registerButton").addEventListener("click", function () 
                 capacityElement.textContent = capacity - 1;
 
             } else {
-                alert("Already Registered!");
-                registerButton.textContent = "Registered";
+                alert("Unable to Register for the event. Please try again later.");
+                registerButton.textContent = "Error";
                 registerButton.disabled = true;
             }
         })

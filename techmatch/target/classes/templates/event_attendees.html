@@ -4,41 +4,50 @@
     <title>Event Attendees</title>
     <link rel="stylesheet" href="/attendees.css">
 </head>
+
 <body>
     <div class="container">
         <div class="card">
             <div class="header">
+                <button class="btn btn-primary" id="back" onclick="location.href='/events/my-events'">Back</button>
                 <h2 class="title">Event Attendees</h2>
-                <span class="badge" th:text="${attendees[0].eventName}"></span>
+                <span class="badge" th:if="${not #lists.isEmpty(attendees)}" th:text="${attendees[0].eventName}"></span>
+                <span class="badge" th:if="${#lists.isEmpty(attendees)}">No attendees yet</span>
             </div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Event ID</th>
-                            <th>User ID</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="attendee : ${attendees}">
-                            <td th:text="${attendee.eventId}"></td>
-                            <td th:text="${attendee.userId}"></td>
-                            <td th:text="${attendee.username}"></td>
-                            <td th:text="${attendee.email}"></td>
-                            <td>
-                                <button class="btn btn-danger delete-attendee" 
-                                        th:data-user-id="${attendee.userId}" 
-                                        th:data-event-id="${attendee.eventId}">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Event ID</th>
+                        <th>User ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Loop through attendees -->
+                    <tr th:each="attendee : ${attendees}">
+                        <td th:text="${attendee.eventId}"></td>
+                        <td th:text="${attendee.userId}"></td>
+                        <td th:text="${attendee.username}"></td>
+                        <td th:text="${attendee.email}"></td>
+                        <td>
+                            <button class="btn btn-danger delete-attendee" 
+                                    th:data-user-id="${attendee.userId}" 
+                                    th:data-event-id="${attendee.eventId}">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+            
+                    <!-- Show "No attendees" row if list is empty -->
+                    <tr th:if="${#lists.isEmpty(attendees)}">
+                        <td colspan="5" class="text-center">No attendees found.</td>
+                    </tr>
+                </tbody>
+            </table>
+         </div>
     </div>
 </body>
 <script src="/event_attendees.js"></script>

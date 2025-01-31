@@ -18,7 +18,6 @@ import jakarta.servlet.http.HttpSession;
 import appdev.com.techmatch.repository.TopicRepository;
 import appdev.com.techmatch.service.UserService;
 import appdev.com.techmatch.repository.EventRepository;
-import appdev.com.techmatch.repository.UserRepository;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,9 +38,6 @@ public class EventController {
 
     @Autowired
     private EventRepository eventRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @PostMapping("/create")
     public String createEvent(
@@ -235,7 +231,14 @@ public class EventController {
     @GetMapping("/attendees/{eventID}")
     public String getEventAttendees(@PathVariable String eventID, Model model) {
         List<EventAttendeeDTO> attendees = eventRepository.getEventAttendeesWithDetails(eventID);
-        model.addAttribute("attendees", attendees);
+
+        if (attendees == null || attendees.isEmpty()) {
+            model.addAttribute("Message", "No attendees found for this event.");
+            model.addAttribute("Attendees", new ArrayList<>());
+        } else{
+            model.addAttribute("attendees", attendees);
+        }
+        
         return "event_attendees";
     }
 
@@ -386,6 +389,8 @@ public ResponseEntity<String> deleteAttendee(
 
     boolean removed = eventService.removeAttendee(eventId, userId);
     if (removed) {
+        event.setCapacity(event.getCapacity() + 1); // Increase capacity by 1
+        eventService.saveEvent(event);
         return ResponseEntity.ok("Attendee removed successfully.");
     } else {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Attendee not found.");

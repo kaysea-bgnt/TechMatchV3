@@ -145,5 +145,28 @@ public class EventService {
     
 
     
+    // CALENDAR FILTER
+    public List<Event> getEventsByDateRange(String startDate, String endDate) {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        return eventRepository.findByStartDateBetween(start, end); // Modified line
+    }
+
+    public List<Event> getEventsByTopicsAndDate(List<String> topics, String date) {
+        List<Event> events = eventRepository.findByTopicsNameInAndStartDate(topics, LocalDate.parse(date));
+          System.out.println("Events found for topics " + topics + " and date " + date + ": " + events.size());
+        return events;
+    }
+
+    public List<Event> getEventsByTopicsAndDateAndType(List<String> topics, String date, String eventType) {
+        List<Event> events = eventRepository.findByTopicsNameInAndStartDateAndEventType(topics, LocalDate.parse(date), eventType);
+        System.out.println("Events found for topics " + topics + " and date " + date + " and type " + eventType +": " + events.size());
+        return events;
+    }
+
+
+
+
     
+
 }

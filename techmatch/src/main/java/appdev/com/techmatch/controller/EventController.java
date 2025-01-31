@@ -335,6 +335,38 @@ public class EventController {
     return "redirect:/events/my-events"; // Redirect back to user events page
 }
 
+@DeleteMapping("/attendees/delete")
+@ResponseBody
+public ResponseEntity<String> deleteAttendee(
+        @RequestParam String userId, 
+        @RequestParam String eventId, 
+        HttpSession session) {
+    
+    User loggedInUser = (User) session.getAttribute("loggedInUser");
+
+    if (loggedInUser == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in.");
+    }
+
+    Event event = eventService.getEventById(eventId);
+    if (event == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Event not found.");
+    }
+
+    // Ensure only the event creator can remove attendees
+    if (!event.getUser().getUserID().equals(loggedInUser.getUserID())) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to remove attendees.");
+    }
+
+    boolean removed = eventService.removeAttendee(eventId, userId);
+    if (removed) {
+        return ResponseEntity.ok("Attendee removed successfully.");
+    } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Attendee not found.");
+    }
+}
+
+
     
     
     

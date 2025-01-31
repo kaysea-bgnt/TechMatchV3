@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import appdev.com.techmatch.model.Event;
 import appdev.com.techmatch.repository.EventRepository;
 import jakarta.transaction.Transactional;
+import appdev.com.techmatch.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,6 +18,9 @@ import java.util.*;
 public class EventService {
     @Autowired
     private EventRepository eventRepository;
+
+    @Autowired
+    private UserService userService;
 
     public Event saveEvent(Event event) {
         // Only generate an event ID if it's a new event (i.e., eventID is null)
@@ -122,6 +126,24 @@ public class EventService {
     
         return eventRepository.save(existingEvent);
     }
+
+    @Transactional
+    public boolean removeAttendee(String eventID, String userID) {
+        Event event = eventRepository.findById(eventID).orElse(null);
+        if (event == null) return false;
+    
+        User user = userService.getUserById(userID);
+        if (user == null) return false;
+    
+        if (!event.getAttendees().contains(user)) return false;
+    
+        event.getAttendees().remove(user);
+        eventRepository.save(event); // Update the event
+    
+        return true;
+    }
+    
+
     
     
 }

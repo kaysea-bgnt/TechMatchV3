@@ -27,6 +27,13 @@
                             <td th:text="${attendee.userId}"></td>
                             <td th:text="${attendee.username}"></td>
                             <td th:text="${attendee.email}"></td>
+                            <td>
+                                <button class="btn btn-danger delete-attendee" 
+                                        th:data-user-id="${attendee.userId}" 
+                                        th:data-event-id="${attendee.eventId}">
+                                    Delete
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -34,5 +41,6 @@
         </div>
     </div>
 </body>
+<script src="/event_attendees.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
 </html>

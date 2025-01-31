@@ -28,8 +28,16 @@ public class UserService {
     }
 
     private String generateCustomUserID() {
-        long count = userRepository.count();
-        return String.format("USER-%06d", count + 1);
+        //long count = userRepository.count();
+        //return String.format("USER-%06d", count + 1);
+        String lastUserID = userRepository.findMaxUserID();
+        if (lastUserID == null) {
+            return "USER-000001";
+        }
+
+        // Extract numeric part
+        int lastNumber = Integer.parseInt(lastUserID.replace("USER-", ""));
+        return String.format("USER-%06d", lastNumber + 1);
     }
 
     public User getUserById(String userID) {

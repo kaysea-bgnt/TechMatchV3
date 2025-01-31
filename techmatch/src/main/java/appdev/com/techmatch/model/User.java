@@ -1,6 +1,10 @@
 package appdev.com.techmatch.model;
 
 import jakarta.persistence.*;
+import java.util.List;
+
+import appdev.com.techmatch.model.Event;
+
 
 @Entity
 public class User {
@@ -16,6 +20,8 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+
+
         // Getters and Setters
     public String getUserID() { return userID; }
     public void setUserID(String userID) { this.userID = userID; }
@@ -28,5 +34,9 @@ public class User {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+
+
+
 
 }

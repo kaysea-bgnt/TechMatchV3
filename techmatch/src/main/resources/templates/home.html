@@ -46,7 +46,9 @@
 
     
 <header class="header">
-    <div class="logo">TechMatch</div>
+    <div class="logo">
+        <a href="/home" style="text-decoration: none; color: inherit;">TechMatch</a>
+      </div>
      <h3>Welcome, <span th:text="${username}"></span>!</h3>
     <h3>Welcome, <span th:text="${email}"></span>!</h3>
     <form id="searchForm" class="search-bar">
@@ -56,6 +58,7 @@
     <div class="nav-items">
         <button class="btn btn-warning" onclick="location.href='/events/my-events'">created events</button>
         <button class="btn btn-warning" onclick="location.href='/create'">+ Create Event</button> <br>
+        <button class="btn btn-warning" onclick="location.href='/profile'"> Profile</button> <br>
         <form action="/logout" method="post">
             <button type="submit" class="btn btn-warning">Logout</button>
         </form>

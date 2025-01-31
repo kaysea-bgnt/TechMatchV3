@@ -54,6 +54,8 @@ public interface EventRepository extends JpaRepository<Event, String> {
     @Query("SELECT e FROM Event e JOIN e.topics t WHERE t.name IN :topics AND e.startDate = :date")
     List<Event> findByTopicsNameInAndStartDate(@Param("topics") List<String> topics, @Param("date") LocalDate date);
 
-   
-
+    //UPCOMING AND PAST EVENTS
+    //Using the name `attendees` for the collection on the query.
+    @Query("SELECT e FROM Event e JOIN e.attendees ru WHERE ru.userID = :userId")
+    List<Event> findRegisteredEventsByUserId(@Param("userId") String userId);
 }

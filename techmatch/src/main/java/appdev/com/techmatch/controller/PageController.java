@@ -13,8 +13,7 @@ public class PageController {
     }
 
 
-    @GetMapping("/create")
-    public String createEventPage() {
-        return "create-event";
-    }
+    
+    
+
 }

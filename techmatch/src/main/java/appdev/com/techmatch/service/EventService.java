@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EventService {
@@ -163,6 +166,66 @@ public class EventService {
         System.out.println("Events found for topics " + topics + " and date " + date + " and type " + eventType +": " + events.size());
         return events;
     }
+
+
+    public  List<Event> filterUpcomingEvents(List<Event> registeredEvents) {
+        LocalDateTime now = LocalDateTime.now();
+        return registeredEvents.stream()
+                .filter(event -> {
+                     if(event == null || event.getStartDate() == null) return false;
+                     LocalDateTime eventDateTime;
+                        if (event.getStartTime() != null) {
+                            eventDateTime = LocalDateTime.of(event.getStartDate(), event.getStartTime());
+                         }else{
+                            eventDateTime = LocalDateTime.of(event.getStartDate(), LocalTime.MIDNIGHT);
+                        }
+                     LocalDateTime endDateTime;
+                     if(event.getEndDate() != null){
+                         if(event.getEndTime() != null){
+                            endDateTime = LocalDateTime.of(event.getEndDate(), event.getEndTime());
+                        }else{
+                             endDateTime = LocalDateTime.of(event.getEndDate(), LocalTime.MIDNIGHT);
+                        }
+                     }
+                     else{
+                       endDateTime = eventDateTime;
+                     }
+                    return endDateTime.isAfter(now);
+                })
+                .collect(Collectors.toList());
+    }
+
+public  List<Event> filterPastEvents(List<Event> registeredEvents) {
+        LocalDateTime now = LocalDateTime.now();
+       return registeredEvents.stream()
+                .filter(event -> {
+                     if(event == null || event.getStartDate() == null) return false;
+                     LocalDateTime eventDateTime;
+                    if (event.getStartTime() != null) {
+                       eventDateTime = LocalDateTime.of(event.getStartDate(), event.getStartTime());
+                    }else{
+                        eventDateTime = LocalDateTime.of(event.getStartDate(), LocalTime.MIDNIGHT);
+                    }
+                        LocalDateTime endDateTime;
+                        if(event.getEndDate() != null){
+                            if(event.getEndTime() != null){
+                                endDateTime = LocalDateTime.of(event.getEndDate(), event.getEndTime());
+                            }else{
+                               endDateTime = LocalDateTime.of(event.getEndDate(), LocalTime.MIDNIGHT);
+                            }
+                       }
+                        else{
+                          endDateTime = eventDateTime;
+                        }
+
+                   return endDateTime.isBefore(now);
+                })
+             .collect(Collectors.toList());
+}
+
+
+
+
 
 
 

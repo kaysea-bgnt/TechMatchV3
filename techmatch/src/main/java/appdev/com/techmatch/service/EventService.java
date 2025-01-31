@@ -85,19 +85,39 @@ public class EventService {
     public List<Event> getEventsByUserID(String userID) {
         return eventRepository.findByUserUserID(userID);
     }
-<<<<<<< HEAD
 
     @Transactional
     public void deleteEvent(String eventID) {
         eventRepository.deleteById(eventID);
     }
     
-=======
->>>>>>> 45df372fbcf35b29d4ee4488c303016840dd7a07
 
     public List<Event> searchEvents(String searchQuery) {
         return eventRepository.findByEventNameContainingIgnoreCaseOrOrganizationContainingIgnoreCase(searchQuery, searchQuery);
     }
     
+    // CALENDAR FILTER
+    public List<Event> getEventsByDateRange(String startDate, String endDate) {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        return eventRepository.findByStartDateBetween(start, end); // Modified line
+    }
+
+    public List<Event> getEventsByTopicsAndDate(List<String> topics, String date) {
+        List<Event> events = eventRepository.findByTopicsNameInAndStartDate(topics, LocalDate.parse(date));
+          System.out.println("Events found for topics " + topics + " and date " + date + ": " + events.size());
+        return events;
+    }
+
+    public List<Event> getEventsByTopicsAndDateAndType(List<String> topics, String date, String eventType) {
+        List<Event> events = eventRepository.findByTopicsNameInAndStartDateAndEventType(topics, LocalDate.parse(date), eventType);
+        System.out.println("Events found for topics " + topics + " and date " + date + " and type " + eventType +": " + events.size());
+        return events;
+    }
+
+
+
+
     
+
 }

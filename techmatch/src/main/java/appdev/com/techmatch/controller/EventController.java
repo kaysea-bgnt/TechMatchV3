@@ -18,8 +18,9 @@ import jakarta.servlet.http.HttpSession;
 import appdev.com.techmatch.repository.TopicRepository;
 import appdev.com.techmatch.service.UserService;
 import appdev.com.techmatch.repository.EventRepository;
-
 import java.io.IOException;
+import java.text.ParseException; 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
@@ -133,21 +134,33 @@ public class EventController {
     }
 
 
-    // Updated method for topic-based filtering
+  // Updated method for topic-based filtering
   @GetMapping
     public String getFilteredEvents(
         @RequestParam(value = "topic", required = false) String[] topics,
         @RequestParam(value = "eventType", required = false) String eventType,
           @RequestParam(value = "search", required = false) String searchQuery,
+        @RequestParam(value = "startDate", required = false) String startDate,
+        @RequestParam(value = "endDate", required = false) String endDate,
         Model model
     ) {
         List<Event> events;
-
-
-    if (searchQuery != null && !searchQuery.isEmpty()) {
-        events = eventService.searchEvents(searchQuery);
-    }
-    else if (topics != null && topics.length > 0 && eventType != null && !eventType.isEmpty()) {
+         if (startDate != null && endDate != null && topics != null && topics.length > 0 && eventType != null && !eventType.isEmpty()) {
+          events = eventService.getEventsByTopicsAndDateAndType(Arrays.asList(topics), startDate, eventType);
+        }
+        else if (startDate != null && endDate != null && topics != null && topics.length > 0) {
+          events = eventService.getEventsByTopicsAndDate(Arrays.asList(topics), startDate);
+         }
+        else if (startDate != null && endDate != null && eventType != null && !eventType.isEmpty()) {
+             events = eventService.getEventsByDateAndType(startDate, eventType);
+        }
+         else if (startDate != null && endDate != null) {
+          events = eventService.getEventsByDateRange(startDate, endDate);
+        }
+        else if (searchQuery != null && !searchQuery.isEmpty()) {
+             events = eventService.searchEvents(searchQuery);
+        }
+        else if (topics != null && topics.length > 0 && eventType != null && !eventType.isEmpty()) {
              events = eventService.getEventsByTopicsAndEventType(Arrays.asList(topics), eventType);
         }
         else if (topics != null && topics.length > 0) {
@@ -162,6 +175,9 @@ public class EventController {
         model.addAttribute("events", events);
         return "home"; // Return view name
     }
+
+
+
 
     @PostMapping("/register")
     @ResponseBody
@@ -224,7 +240,6 @@ public class EventController {
         
         return "my-events"; // This will be your HTML page displaying user-created events
     }
-<<<<<<< HEAD
 
     @DeleteMapping("/delete/{eventID}")
     @ResponseBody
@@ -249,10 +264,4 @@ public class EventController {
         return ResponseEntity.ok("Event deleted successfully.");
     } 
     
-    
-
-    
-
-=======
->>>>>>> 45df372fbcf35b29d4ee4488c303016840dd7a07
 }

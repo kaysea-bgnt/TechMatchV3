@@ -36,4 +36,24 @@ public interface EventRepository extends JpaRepository<Event, String> {
     @Query("SELECT e FROM Event e WHERE LOWER(e.eventName) LIKE LOWER(concat('%', :searchQuery, '%')) OR LOWER(e.organization) LIKE LOWER(concat('%', :searchQuery, '%'))")
     List<Event> findByEventNameContainingIgnoreCaseOrOrganizationContainingIgnoreCase(@Param("searchQuery") String searchQuery1, @Param("searchQuery") String searchQuery2);
 
+    // CALENDAR 
+    // DATE ONLY
+    @Query("SELECT e FROM Event e WHERE e.startDate BETWEEN :startDate AND :endDate ORDER BY e.startDate ASC, e.eventName ASC")
+    List<Event> findByStartDateBetween(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    
+    @Query("SELECT e FROM Event e WHERE e.startDate <= :endDate AND e.endDate >= :startDate")
+    List<Event> findByStartDateLessThanEqualAndEndDateGreaterThanEqual(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+
+
+
+    @Query("SELECT e FROM Event e JOIN e.topics t WHERE t.name IN :topics AND e.startDate = :date AND e.eventType = :eventType")
+    List<Event> findByTopicsNameInAndStartDateAndEventType(@Param("topics") List<String> topics, @Param("date") LocalDate date, @Param("eventType") String eventType);
+
+    @Query("SELECT e FROM Event e JOIN e.topics t WHERE t.name IN :topics AND e.startDate = :date")
+    List<Event> findByTopicsNameInAndStartDate(@Param("topics") List<String> topics, @Param("date") LocalDate date);
+
+   
+
 }

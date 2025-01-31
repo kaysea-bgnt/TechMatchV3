@@ -3,7 +3,6 @@ let userID = null; // Store the current user ID
 let allEvents = []; // Store all events fetched from the server
 let lastSearchQuery = "";
 
-
 // Fetch user details when the page loads
 document.addEventListener("DOMContentLoaded", async () => {
     try {
@@ -23,8 +22,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Attach event listeners for event cards dynamically
     attachEventListeners();
 
+    // Initialize DateRangePicker and store its reference
+     const dateRangePicker = new DateRangePicker();
+
     // Setup filter functionality after DOM is ready
-    setupFilterFunctionality();
+    setupFilterFunctionality(dateRangePicker);
 
     // Setup search functionality after DOM is ready
     setupSearchFunctionality();
@@ -128,7 +130,7 @@ document.getElementById("registerButton").addEventListener("click", function () 
 
     console.log("Registering user for event:", { userID, eventID: currentEventID });
 
-    fetch(`/events/register`, {
+    fetch("/events/register", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -155,10 +157,11 @@ document.getElementById("registerButton").addEventListener("click", function () 
 
 
 // FUNCTIONALITY FOR APPLY FILTERS AND RESET FILTERS
-function setupFilterFunctionality() {
+function setupFilterFunctionality(dateRangePicker) { //Receives DateRangePicker
     const eventTypeFilter = document.getElementById('eventTypeFilter');
     const applyFilterButton = document.getElementById("applyFilter");
     const resetFilterButton = document.getElementById("resetFilter");
+
 
     let selectedTopics = [];
 
@@ -178,6 +181,13 @@ function setupFilterFunctionality() {
           highlightButton(applyFilterButton, resetFilterButton);
         let url = `/events?`;
 
+         if (dateRangePicker.startDateInput.value) { //Read values from dateRangePicker
+              url += `startDate=${dateRangePicker.startDateInput.value}&`;
+         }
+           if (dateRangePicker.endDateInput.value) { //Read values from dateRangePicker
+              url += `endDate=${dateRangePicker.endDateInput.value}&`;
+         }
+          
         if (selectedTopics && selectedTopics.length > 0) {
              selectedTopics.forEach((topic, index) => {
                 url += `topic=${topic}`;
@@ -194,6 +204,7 @@ function setupFilterFunctionality() {
              url += `eventType=${selectedType}`;
         }
 
+
        // Load entire page when filter changes
         window.location.href = url;
     }
@@ -202,6 +213,8 @@ function setupFilterFunctionality() {
     function resetFilters() {
          eventTypeFilter.value = "";
          selectedTopics = [];
+          dateRangePicker.startDateInput.value = ""; //Reset values from dateRangePicker
+          dateRangePicker.endDateInput.value = ""; //Reset values from dateRangePicker
          highlightButton(resetFilterButton, applyFilterButton);
 
 
@@ -265,6 +278,268 @@ function setupSearchFunctionality() {
 }
 
 
+// CALENDAR DATE PICKER
+class DateRangePicker {
+    constructor() {
+        this.currentDate = new Date();
+        this.startDate = null;
+        this.endDate = null;
+        this.isSelectingRange = false;
+        this.months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        
+        this.init();
+    }
+
+    init() {
+        this.setupElements();
+        this.setupEventListeners();
+        this.render();
+    }
+
+    setupElements() {
+        const container = document.querySelector('.date-picker-container');
+        container.innerHTML = 
+            `<div class="date-picker-header">
+                <button id="prevMonth" class="month-nav"><</button>
+                <span id="currentMonthYear"></span>
+                <button id="nextMonth" class="month-nav">></button>
+            </div>
+            <div class="weekdays-container">
+                <div>Su</div>
+                <div>Mo</div>
+                <div>Tu</div>
+                <div>We</div>
+                <div>Th</div>
+                <div>Fr</div>
+                <div>Sa</div>
+            </div>
+            <div id="daysContainer" class="days-container"></div>
+            <div class="date-range-display">
+                <span id="dateRangeText">No date range selected</span>
+                <button id="clearDates" class="clear-dates">Clear</button>
+            </div>
+            <input type="hidden" id="startDate" name="startDate">
+            <input type="hidden" id="endDate" name="endDate">
+        `;
+
+        this.prevMonthBtn = document.getElementById('prevMonth');
+        this.nextMonthBtn = document.getElementById('nextMonth');
+        this.currentMonthYearElem = document.getElementById('currentMonthYear');
+        this.daysContainer = document.getElementById('daysContainer');
+        this.dateRangeText = document.getElementById('dateRangeText');
+        this.clearDatesBtn = document.getElementById('clearDates');
+        this.startDateInput = document.getElementById('startDate');
+        this.endDateInput = document.getElementById('endDate');
+    }
+
+    setupEventListeners() {
+        this.prevMonthBtn.addEventListener('click', () => this.navigateMonth(-1));
+        this.nextMonthBtn.addEventListener('click', () => this.navigateMonth(1));
+        this.clearDatesBtn.addEventListener('click', () => this.clearSelection());
+    }
+
+    navigateMonth(delta) {
+        const year = this.currentDate.getFullYear();
+        const month = this.currentDate.getMonth() + delta;
+    
+        this.currentDate = new Date(year, month, 1); // Ensure it always starts at the 1st of the month
+        this.render();
+    }
+    
+
+    formatDate(date) {
+        if (!date) return '';
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        return `${date.getFullYear()}-${month}-${day}`;
+    }
+
+    isSameDate(date1, date2) {
+        return date1 && date2 && 
+            date1.getFullYear() === date2.getFullYear() &&
+            date1.getMonth() === date2.getMonth() &&
+            date1.getDate() === date2.getDate();
+    }
+
+    isInRange(date) {
+        if (!this.startDate || !this.endDate) return false;
+        return date >= this.startDate && date <= this.endDate;
+    }
+
+    clearSelection() {
+        this.startDate = null;
+        this.endDate = null;
+        this.isSelectingRange = false;
+        this.updateDateRangeText();
+        this.startDateInput.value = '';
+        this.endDateInput.value = '';
+        this.render();
+    }
+
+    updateDateRangeText() {
+         if (!this.startDate) {
+            this.dateRangeText.textContent = 'No date range selected';
+            return;
+        }
+
+        const formatDateDisplay = (date) => {
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric',
+                year: 'numeric'
+            });
+        };
+
+        if (this.startDate && this.endDate) {
+            this.dateRangeText.textContent = 
+                `${formatDateDisplay(this.startDate)} - ${formatDateDisplay(this.endDate)}`;
+        } else if (this.startDate) {
+            this.dateRangeText.textContent = 
+                `${formatDateDisplay(this.startDate)} - Select end date`;
+        }
+    }
+
+    handleDateClick(day) {
+        const clickedDate = new Date(
+            this.currentDate.getFullYear(),
+            this.currentDate.getMonth(),
+            day
+        );
+
+        if (!this.startDate || (this.startDate && this.endDate) || clickedDate < this.startDate) {
+            // Start new selection
+            this.startDate = clickedDate;
+            this.endDate = null;
+            this.isSelectingRange = true;
+        } else {
+            // Complete the range
+            this.endDate = clickedDate;
+            this.isSelectingRange = false;
+            
+            // Swap dates if end is before start
+            if (this.endDate < this.startDate) {
+                [this.startDate, this.endDate] = [this.endDate, this.startDate];
+            }
+        }
+
+        this.startDateInput.value = this.formatDate(this.startDate);
+        this.endDateInput.value = this.formatDate(this.endDate);
+        this.updateDateRangeText();
+        this.render();
+       console.log("Start Date Input Value:", this.startDateInput.value);
+        console.log("End Date Input Value:", this.endDateInput.value);
+    }
+
+
+    render() {
+        this.currentMonthYearElem.textContent = 
+            `${this.months[this.currentDate.getMonth()]} ${this.currentDate.getFullYear()}`;
+
+        this.daysContainer.innerHTML = '';
+        
+        const firstDay = new Date(
+            this.currentDate.getFullYear(),
+            this.currentDate.getMonth(),
+            1
+        ).getDay();
+
+        const daysInMonth = new Date(
+            this.currentDate.getFullYear(),
+            this.currentDate.getMonth() + 1,
+            0
+        ).getDate();
+
+        // Add empty cells for days before start of month
+        for (let i = 0; i < firstDay; i++) {
+            const emptyDay = document.createElement('div');
+            emptyDay.className = 'day empty';
+            this.daysContainer.appendChild(emptyDay);
+        }
+
+        // Add days of month
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(
+                this.currentDate.getFullYear(),
+                this.currentDate.getMonth(),
+                day
+            );
+
+            const dayElem = document.createElement('button');
+            dayElem.className = 'day';
+            dayElem.textContent = day;
+
+            // Add appropriate classes based on selection state
+            if (this.isSameDate(date, this.startDate)) {
+                dayElem.classList.add('range-start');
+            }
+            if (this.isSameDate(date, this.endDate)) {
+                dayElem.classList.add('range-end');
+            }
+            if (this.isInRange(date)) {
+                dayElem.classList.add('in-range');
+            }
+
+            dayElem.addEventListener('click', () => this.handleDateClick(day));
+            this.daysContainer.appendChild(dayElem);
+        }
+    }
+}
+
+// Initialize DateRangePicker when document is ready
+document.addEventListener('DOMContentLoaded', () => {
+    new DateRangePicker();
+});
+    
+
+
+// SCROLL TOPICS
+document.addEventListener('DOMContentLoaded', function() {
+    const topicsWrapper = document.querySelector('.topics-wrapper');
+    const topicsRow = document.querySelector('.topics-row');
+    const scrollLeftBtn = document.getElementById('scrollLeft');
+    const scrollRightBtn = document.getElementById('scrollRight');
+    
+    // Scroll amount for each click (adjust as needed)
+    const scrollAmount = 200;
+
+    // Handle left scroll
+    scrollLeftBtn.addEventListener('click', () => {
+        topicsWrapper.scrollBy({
+            left: -scrollAmount,
+            behavior: 'smooth'
+        });
+    });
+
+    // Handle right scroll
+    scrollRightBtn.addEventListener('click', () => {
+        topicsWrapper.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+        });
+    });
+
+    // Show/hide arrows based on scroll position
+    function updateArrowVisibility() {
+        const { scrollLeft, scrollWidth, clientWidth } = topicsWrapper;
+        
+        scrollLeftBtn.style.opacity = scrollLeft > 0 ? '1' : '0.5';
+        scrollRightBtn.style.opacity = 
+            scrollLeft < (scrollWidth - clientWidth - 1) ? '1' : '0.5';
+    }
+
+    // Update arrow visibility on scroll and resize
+    topicsWrapper.addEventListener('scroll', updateArrowVisibility);
+    window.addEventListener('resize', updateArrowVisibility);
+
+    // Initial arrow visibility check
+    updateArrowVisibility();
+});
+
+
+
 function updateEventCards(events) {
     const eventContainer = document.getElementById('event-container');
     eventContainer.innerHTML = ''; // Clear existing cards
@@ -280,8 +555,8 @@ function updateEventCards(events) {
     events.forEach(event => {
         const eventCard = document.createElement('div');
         eventCard.classList.add('col');
-        eventCard.innerHTML = `
-        <div class="card h-100 event-card" data-event-id="${event.eventID}">
+        eventCard.innerHTML = 
+        `<div class="card h-100 event-card" data-event-id="${event.eventID}">
                 <img src="data:image/jpeg;base64,${event.base64Image}" class="card-img-top" alt="Event Image">
               <div class="card-body">
                 <h5 class="card-title">${event.eventName}</h5>
@@ -296,4 +571,44 @@ function updateEventCards(events) {
         `;
         eventContainer.appendChild(eventCard);
     });
+}
+
+
+
+// Function to update events list
+function updateEventsList(events) {
+    const eventsContainer = document.querySelector('.row.row-cols-1.row-cols-md-3.g-4');
+    eventsContainer.innerHTML = ''; // Clear existing events
+
+    if (events.length === 0) {
+        const noEventsMessage = document.createElement('div');
+        noEventsMessage.classList.add('col-12', 'text-center', 'text-white');
+        noEventsMessage.innerHTML = "<h3>No events matched with the date selected.</h3>";
+        eventsContainer.appendChild(noEventsMessage);
+        return;
+    }
+
+    // Add your logic to render events based on your template structure
+    events.forEach(event => {
+        const eventCard = createEventCard(event);
+        eventsContainer.appendChild(eventCard);
+    });
+}
+
+function createEventCard(event) {
+    const eventCard = document.createElement('div');
+    eventCard.classList.add('col');
+    eventCard.innerHTML = `
+        <div class="card h-100 event-card" data-event-id="${event.eventID}">
+            <img src="data:image/jpeg;base64,${event.base64Image}" class="card-img-top" alt="Event Image">
+            <div class="card-body">
+                <h5 class="card-title">${event.eventName}</h5>
+                <p class="card-text"><strong>Topic:</strong> ${event.topics.map(topic => topic.name).join(', ')}</p>
+                <p class="card-text"><strong>Type:</strong> ${event.eventType}</p>
+                <p class="card-text"><strong>Date:</strong> ${event.startDate} to ${event.endDate}</p>
+                <p class="card-text"><strong>Capacity:</strong> ${event.capacity}</p>
+            </div>
+        </div>
+    `;
+    return eventCard;
 }

@@ -221,6 +221,29 @@ public class EventController {
         
         return "my-events"; // This will be your HTML page displaying user-created events
     }
+
+    @DeleteMapping("/delete/{eventID}")
+    @ResponseBody
+    public ResponseEntity<String> deleteEvent(@PathVariable String eventID, HttpSession session) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+    
+        if (loggedInUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not logged in.");
+        }
+    
+        Event event = eventService.getEventById(eventID);
+        if (event == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Event not found.");
+        }
+    
+        // Ensure only the creator can delete the event
+        if (!event.getUser().getUserID().equals(loggedInUser.getUserID())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this event.");
+        }
+    
+        eventService.deleteEvent(eventID);
+        return ResponseEntity.ok("Event deleted successfully.");
+    } 
     
     
 

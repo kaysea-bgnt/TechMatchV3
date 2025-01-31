@@ -162,12 +162,15 @@ document.getElementById("registerButton").addEventListener("click", function () 
             if (response.ok) {
                 alert("Successfully registered for the event!");
                 let registerButton = document.getElementById("registerButton");
-                registerButton.textContent = "Registered";
+                registerButton.textContent = "Pending Approval";
                 registerButton.classList.remove("btn-primary");
                 registerButton.classList.add("btn-success");
                 registerButton.disabled = true;
             } else {
-                alert("Failed to register for the event. Please try again later.");
+                alert("Pending approval!");
+                registerButton.textContent = "Pending Approval";
+                registerButton.disabled = true;
+
             }
         })
         .catch((error) => {

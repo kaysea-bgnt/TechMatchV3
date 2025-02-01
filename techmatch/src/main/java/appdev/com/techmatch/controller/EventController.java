@@ -135,46 +135,62 @@ public class EventController {
 
   // Updated method for topic-based filtering
   @GetMapping
-    public String getFilteredEvents(
-        @RequestParam(value = "topic", required = false) String[] topics,
-        @RequestParam(value = "eventType", required = false) String eventType,
+  public String getFilteredEvents(
+          @RequestParam(value = "topic", required = false) String[] topics,
+           @RequestParam(value = "eventType", required = false) String eventType,
           @RequestParam(value = "search", required = false) String searchQuery,
-        @RequestParam(value = "startDate", required = false) String startDate,
-        @RequestParam(value = "endDate", required = false) String endDate,
-        Model model
-    ) {
-        List<Event> events;
-         if (startDate != null && endDate != null && topics != null && topics.length > 0 && eventType != null && !eventType.isEmpty()) {
-          events = eventService.getEventsByTopicsAndDateAndType(Arrays.asList(topics), startDate, eventType);
-        }
-        else if (startDate != null && endDate != null && topics != null && topics.length > 0) {
-          events = eventService.getEventsByTopicsAndDate(Arrays.asList(topics), startDate);
+          @RequestParam(value = "date", required = false) String date,
+          @RequestParam(value = "startDate", required = false) String startDate,
+           @RequestParam(value = "endDate", required = false) String endDate,
+          Model model
+  ) {
+    List<Event> events;
+      
+    if(startDate != null && endDate != null && topics != null && topics.length > 0 && eventType != null && !eventType.isEmpty()){
+        events = eventService.getEventsByTopicsAndDateRangeAndType(Arrays.asList(topics), startDate, endDate, eventType);
+    }
+     else if (startDate != null && endDate != null && topics != null && topics.length > 0) {
+          events = eventService.getEventsByTopicsAndDateRange(Arrays.asList(topics), startDate, endDate);
          }
-        else if (startDate != null && endDate != null && eventType != null && !eventType.isEmpty()) {
-             events = eventService.getEventsByDateAndType(startDate, eventType);
-        }
-         else if (startDate != null && endDate != null) {
-          events = eventService.getEventsByDateRange(startDate, endDate);
-        }
-        else if (searchQuery != null && !searchQuery.isEmpty()) {
-             events = eventService.searchEvents(searchQuery);
-        }
-        else if (topics != null && topics.length > 0 && eventType != null && !eventType.isEmpty()) {
-             events = eventService.getEventsByTopicsAndEventType(Arrays.asList(topics), eventType);
-        }
-        else if (topics != null && topics.length > 0) {
-            events = eventService.getEventsByTopics(Arrays.asList(topics));
-        }
-         else if (eventType != null && !eventType.isEmpty()) {
-            events = eventService.getEventsByEventType(eventType);
-        }
-         else {
-            events = eventService.getAllEvents();
-        }
-        model.addAttribute("events", events);
-        return "home"; // Return view name
+     else if (date != null && topics != null && topics.length > 0 && eventType != null && !eventType.isEmpty()) {
+        events = eventService.getEventsByTopicsAndDateAndType(Arrays.asList(topics), date, eventType);
+     }
+     else if(date != null && topics != null && topics.length > 0) {
+         events = eventService.getEventsByTopicsAndDate(Arrays.asList(topics),date);
+     }
+     else if (date != null && eventType != null && !eventType.isEmpty()) {
+        events = eventService.getEventsByDateAndType(date, eventType);
+    }
+     else if(date != null){
+         events = eventService.getEventsByDate(date);
+    }
+    else if (startDate != null && endDate != null && eventType != null && !eventType.isEmpty()) {
+        events = eventService.getEventsByDateRangeAndType(startDate, endDate, eventType);
+    }
+    else if (startDate != null && endDate != null) {
+        events = eventService.getEventsByDateRange(startDate, endDate);
+    }
+    else if (searchQuery != null && !searchQuery.isEmpty()) {
+        events = eventService.searchEvents(searchQuery);
     }
 
+    else if (topics != null && topics.length > 0 && eventType != null && !eventType.isEmpty()) {
+         events = eventService.getEventsByTopicsAndEventType(Arrays.asList(topics), eventType);
+    }
+    else if (topics != null && topics.length > 0) {
+        events = eventService.getEventsByTopics(Arrays.asList(topics));
+    }
+     else if (eventType != null && !eventType.isEmpty()) {
+        events = eventService.getEventsByEventType(eventType);
+    }
+    else {
+        events = eventService.getAllEvents();
+    }
+
+    model.addAttribute("events", events);
+    return "home";
+}
+    
 
 
 

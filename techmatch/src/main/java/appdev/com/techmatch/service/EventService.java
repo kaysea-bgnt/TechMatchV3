@@ -85,18 +85,9 @@ public class EventService {
         return eventRepository.findByTopicsNameInAndEventType(topics, eventType);
     }
     
-    public List<Event> getEventsByDateAndType(String date, String type) {
-        List<Event> events;
-        if (date != null && type != null) {
-            events = eventRepository.findByDateAndType(LocalDate.parse(date), type);
-        } else if (date != null) {
-            events = eventRepository.findByStartDate(LocalDate.parse(date));
-        } else {
-            events = eventRepository.findByEventType(type);
-        }
-        System.out.println("Events found for date " + date + " and type " + type + ": " + events.size());
-        return events;
-    }
+
+
+
 
     public List<Event> getEventsByUserID(String userID) {
         return eventRepository.findByUserUserID(userID);
@@ -155,21 +146,69 @@ public class EventService {
 
     
     // CALENDAR FILTER
+    // SINGLE DATE ONLY
+    public List<Event> getEventsByDate(String date) {
+        List<Event> events;
+        if (date != null) {
+             events = eventRepository.findByStartDate(LocalDate.parse(date));
+        }else{
+             events = eventRepository.findAll();
+        }
+        System.out.println("Events found for date " + date + ": " + events.size());
+        return events;
+    }
+    // RANGE DATE ONLY
     public List<Event> getEventsByDateRange(String startDate, String endDate) {
         LocalDate start = LocalDate.parse(startDate);
         LocalDate end = LocalDate.parse(endDate);
         return eventRepository.findByStartDateBetween(start, end); // Modified line
     }
 
+    // TOPICS AND DATE
     public List<Event> getEventsByTopicsAndDate(List<String> topics, String date) {
         List<Event> events = eventRepository.findByTopicsNameInAndStartDate(topics, LocalDate.parse(date));
           System.out.println("Events found for topics " + topics + " and date " + date + ": " + events.size());
         return events;
     }
 
+    // TYPE AND DATE 
+    public List<Event> getEventsByDateAndType(String date, String type) {
+        List<Event> events = eventRepository.findByDateAndType(LocalDate.parse(date), type);
+        System.out.println("Events found for date " + date + " and type " + type + ": " + events.size());
+        return events;
+    }
+
+    // DATE RANGE AND TYPE
+     public List<Event> getEventsByDateRangeAndType(String startDate, String endDate, String eventType) {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        List<Event> events = eventRepository.findByStartDateBetweenAndEventType(start, end, eventType);
+           System.out.println("Events found for date range " + startDate + " to " + endDate + " and type " + eventType +": " + events.size());
+        return events;
+    }
+
+    // TOPICS, DATE, AND TYPE
     public List<Event> getEventsByTopicsAndDateAndType(List<String> topics, String date, String eventType) {
         List<Event> events = eventRepository.findByTopicsNameInAndStartDateAndEventType(topics, LocalDate.parse(date), eventType);
         System.out.println("Events found for topics " + topics + " and date " + date + " and type " + eventType +": " + events.size());
+        return events;
+    }
+
+    // TOPICS, TYPE, RANGE DATE FILTER
+    public List<Event> getEventsByTopicsAndDateRangeAndType(List<String> topics, String startDate, String endDate, String eventType) {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        List<Event> events = eventRepository.findByTopicsNameInAndStartDateBetweenAndEventType(topics, start, end, eventType);
+           System.out.println("Events found for topics " + topics + " and date range " + startDate + " to " + endDate + " and type " + eventType +": " + events.size());
+        return events;
+    }
+
+    //TOPIC AND DATE RANGE
+    public List<Event> getEventsByTopicsAndDateRange(List<String> topics, String startDate, String endDate) {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        List<Event> events = eventRepository.findByTopicsNameInAndStartDateBetween(topics, start, end);
+          System.out.println("Events found for topics " + topics + " and date range " + startDate + " to " + endDate + ": " + events.size());
         return events;
     }
 

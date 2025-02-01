@@ -11,9 +11,9 @@
     <style>
         /* Modal Background */
         .modal-content {
-            background-color: #333 !important; /* Dark Gray Background */
-            color: #fff !important; /* White Text */
-            border: 1px solid #555; /* Slightly lighter gray border */
+            background-color: #333 !important; 
+            color: #fff !important; 
+            border: 1px solid #555; 
         }
         
         /* Ensures All Text Inside Modal is White */
@@ -23,31 +23,77 @@
         
         /* Close Button Visibility */
         .modal-header .btn-close {
-            filter: invert(1); /* Ensures the close button is visible */
+            filter: invert(1); 
         }
         
         /* Styled Button (Dark Gray Default, Yellow Hover) */
         .modal-footer .btn-secondary {
-            background-color: #444 !important; /* Dark Gray */
-            color: #fff !important; /* White Text */
-            border: 1px solid #666 !important; /* Slight Border */
+            background-color: #444 !important; 
+            color: #fff !important; 
+            border: 1px solid #666 !important; 
             font-weight: bold;
-            transition: background-color 0.3s ease; /* Smooth Hover Effect */
+            transition: background-color 0.3s ease; 
         }
         
         /* Hover Effect for Button */
         .modal-footer .btn-secondary:hover {
-            background-color: #FFD700 !important; /* Gold (Yellow) */
-            color: #000 !important; /* Black Text */
+            background-color: #FFD700 !important; 
+            color: #000 !important; 
             border: 1px solid #FFD700 !important;
         }
-           
+        
+        /* Date Filter */
+        .date-filter {
+            background-color: #1f1f1f;
+            padding: 15px;
+            border-radius: 8px;
+            height: fit-content;
+        }
+        
+        /* Scroll Arrows */
+        .scroll-arrow {
+            background-color: #2d2d2d;
+            border: none;
+            color: #ffffff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            z-index: 2;
+        }
+        
+        .scroll-arrow:hover {
+            background-color: #FFD700;
+            color: #000000;
+        }
+        
+        /* Filter Buttons */
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        /* Responsive Layout */
+        @media (max-width: 992px) {
+            .filter-container {
+                flex-direction: column;
+            }
+        
+            .left-filters {
+                max-width: 100%;
+            }
+        
+            .right-filters {
+                width: 100%;
+            }
+        }
+    
     </style>
 
     
 <header class="header">
-    <div class="logo">TechMatch</div>
-     <h5>Welcome, <span th:text="${username}"></span>!</h5>
+    <a href="/home" class="logo" style="text-decoration: none; color: inherit;">TechMatch</a>
     <form id="searchForm" class="search-bar">
         <input type="text" id="searchInput" placeholder="Search..." class="form-control">
         <button type="submit" style="display: none;"></button>
@@ -125,7 +171,6 @@
 
 <!-- Right Side Date Filter -->
 <div class="right-filters">
-    <div class="date-filter text-white">
         <div class="mb-3 text-white">
             <label class="form-label">Filter by Date:</label>
             <div class="date-picker-container">
@@ -148,7 +193,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </div>
 </div>
 

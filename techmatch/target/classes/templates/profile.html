@@ -49,8 +49,6 @@
     <div class="logo">
         <a href="/home" style="text-decoration: none; color: inherit;">TechMatch</a>
       </div>
-     <h3>Welcome, <span th:text="${username}"></span>!</h3>
-    <h3>Welcome, <span th:text="${email}"></span>!</h3>
     <form id="searchForm" class="search-bar">
         <input type="text" id="searchInput" placeholder="Search..." class="form-control">
         <button type="submit" style="display: none;"></button>
@@ -70,8 +68,8 @@
     <div class="profile-section">
         <h2 class="text-center">User Profile</h2>
         <div class="user-info">
-            <p><strong>Username:</strong> <span th:text="${username}"></span></p>
-            <p><strong>Email:</strong> <span th:text="${email}"></span></p>
+            <p><strong>USER:  <span th:text="${username}"> </strong></span></p>
+          <!-- not showing email  <p><strong>Email:</strong> <span th:text="${email}"></span></p>-->
             <!-- Add other profile details here -->
         </div>
     </div>

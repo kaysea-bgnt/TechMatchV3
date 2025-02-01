@@ -25,4 +25,6 @@ public class Topic {
 
     public Set<Event> getEvents() { return events; }
     public void setEvents(Set<Event> events) { this.events = events; }
+
+    
 }

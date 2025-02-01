@@ -151,16 +151,12 @@ public class LoginController {
                     return "redirect:/login";
             }
        
-
             // Get all events a user is registered for
             List<Event> registeredEvents = eventRepository.findRegisteredEventsByUserId(loggedInUser.getUserID());
-
-        
 
             // Filter events into upcoming and past
             List<Event> upcomingEvents = eventService.filterUpcomingEvents(registeredEvents);
             List<Event> pastEvents = eventService.filterPastEvents(registeredEvents);
-
 
             model.addAttribute("username", loggedInUser.getUsername());
             model.addAttribute("upcomingEvents", upcomingEvents);

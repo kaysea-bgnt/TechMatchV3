@@ -66,8 +66,8 @@ function attachEventListeners() {
                document.getElementById("eventDate").textContent = (event.startDate && event.endDate) ? `${event.startDate} to ${event.endDate}` : "N/A";
 
 
-               // Format Time (Convert to AM/PM Format)
-                 function formatTime(time) {
+                // Format Time (Convert to AM/PM Format)
+                function formatTime(time) {
                     if (!time) return "N/A";
                    try {
                      const [hour, minute] = time.split(":");
@@ -82,7 +82,7 @@ function attachEventListeners() {
                       if (formattedHour === 0){
                            formattedHour = 12;
                       }
-                   return `${formattedHour}:${formattedHour} ${ampm}`;
+                   return `${formattedHour}:${minute} ${ampm}`;
                  } catch (error){
                      console.error("Error formatting time", error);
                       return "N/A";

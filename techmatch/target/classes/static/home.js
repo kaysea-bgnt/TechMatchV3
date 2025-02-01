@@ -107,10 +107,28 @@ function attachEventListeners() {
                 // Reset Register button state
                 let registerButton = document.getElementById("registerButton");
 
-                // Check if the logged-in user is the event creator
-                if (event.user.userID === userID) {
+                const currentDateTime = new Date(); // Current date and time
+
+                const eventEndDateTime = new Date(`${event.endDate}T${event.endTime}`);
+                console.log("Event End Date & Time:", eventEndDateTime);
+                console.log("Current Date & Time:", currentDateTime);
+                
+                if (eventEndDateTime < currentDateTime) {
+                    console.log("Event has ended.");
+                    registerButton.textContent = "Event Ended";
+                    registerButton.classList.add("btn-secondary");
+                    registerButton.classList.remove("btn-primary");
+                    registerButton.disabled = true;
+                } else if (event.user.userID === userID) {
                     console.log("User is the creator, disabling Register button.");
                     registerButton.textContent = "You are the organizer";
+                    registerButton.classList.add("btn-secondary");
+                    registerButton.classList.remove("btn-primary");
+                    registerButton.disabled = true;
+
+                } else if (event.capacity <= 0) {
+                    console.log("Event is full.");
+                    registerButton.textContent = "Event Full";
                     registerButton.classList.add("btn-secondary");
                     registerButton.classList.remove("btn-primary");
                     registerButton.disabled = true;
@@ -121,6 +139,8 @@ function attachEventListeners() {
                     registerButton.classList.remove("btn-secondary");
                     registerButton.disabled = false;
                 }
+                
+                
 
                 // Show the modal
                 let eventModal = new bootstrap.Modal(document.getElementById("eventDetailModal"));

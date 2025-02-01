@@ -60,8 +60,8 @@ public interface EventRepository extends JpaRepository<Event, String> {
     @Query("SELECT MAX(e.eventID) FROM Event e")
     String findMaxEventID();
 
-    
-
-   
-
+    //UPCOMING AND PAST EVENTS
+    //Using the name `attendees` for the collection on the query.
+    @Query("SELECT e FROM Event e JOIN e.attendees ru WHERE ru.userID = :userId")
+    List<Event> findRegisteredEventsByUserId(@Param("userId") String userId);
 }

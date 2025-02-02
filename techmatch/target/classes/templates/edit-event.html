@@ -38,12 +38,14 @@
             <div class="form-group">
                 <label for="eventType">Event Type:</label>
                 <select id="eventType" name="eventType" required>
+                    <option value="Conference" th:selected="${event.eventType == 'Conference'}">Conference</option>
                     <option value="Hackathon" th:selected="${event.eventType == 'Hackathon'}">Hackathon</option>
                     <option value="Networking" th:selected="${event.eventType == 'Networking'}">Networking</option>
-                    <option value="Workshop" th:selected="${event.eventType == 'Workshop'}">Workshop</option>
+                    <option value="Talks" th:selected="${event.eventType == 'Talks'}">Talks</option>
                     <option value="Seminar" th:selected="${event.eventType == 'Seminar'}">Seminar</option>
-                    <option value="Webinar" th:selected="${event.eventType == 'Webinar'}">Webinar</option>
                     <option value="Study Session" th:selected="${event.eventType == 'Study Session'}">Study Session</option>
+                    <option value="Webinar" th:selected="${event.eventType == 'Webinar'}">Webinar</option>
+                    <option value="Workshop" th:selected="${event.eventType == 'Workshop'}">Workshop</option>
                 </select>
             </div>
 

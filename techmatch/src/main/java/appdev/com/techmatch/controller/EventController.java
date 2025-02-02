@@ -25,7 +25,7 @@ import org.springframework.http.ResponseEntity;
 
 
 @Controller
-@RequestMapping("/events")
+@RequestMapping("/events") // Routing for events
 public class EventController {
     @Autowired
     private EventService eventService;
@@ -39,7 +39,7 @@ public class EventController {
     @Autowired
     private EventRepository eventRepository;
 
-    @PostMapping("/create")
+    @PostMapping("/create") // Routing for create
     public String createEvent(
         @ModelAttribute Event event,
         @RequestParam("eventTopics") String[] eventTopics, // Collect selected topics
@@ -87,7 +87,7 @@ public class EventController {
         return "redirect:/home";
     }
 
-    @GetMapping("/{id}") // Change from /events/{id} to simply /{id}
+    @GetMapping("/{id}") // Routing for event details in event cards
     @ResponseBody
     public Map<String, Object> getEventDetails(@PathVariable String id) {
         Event event = eventService.getEventById(id);
@@ -126,22 +126,23 @@ public class EventController {
 
 
 
-    @GetMapping("/create")
+    @GetMapping("/create") // Routing for create event
     public String showEventForm(Model model) {
         model.addAttribute("event", new Event());
-        return "create-event"; // Render the event creation form
+        return "create-event";
     }
 
 
-  // Updated method for topic-based filtering
+  // Method for filtering events
   @GetMapping
   public String getFilteredEvents(
-          @RequestParam(value = "topic", required = false) String[] topics,
-           @RequestParam(value = "eventType", required = false) String eventType,
-          @RequestParam(value = "search", required = false) String searchQuery,
-          @RequestParam(value = "date", required = false) String date,
-          @RequestParam(value = "startDate", required = false) String startDate,
-           @RequestParam(value = "endDate", required = false) String endDate,
+            
+            @RequestParam(value = "topic", required = false) String[] topics,
+            @RequestParam(value = "eventType", required = false) String eventType,
+            @RequestParam(value = "search", required = false) String searchQuery,
+            @RequestParam(value = "date", required = false) String date,
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate,
           Model model
   ) {
     List<Event> events;

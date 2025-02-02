@@ -159,6 +159,7 @@ public class LoginController {
             List<Event> pastEvents = eventService.filterPastEvents(registeredEvents);
 
             model.addAttribute("username", loggedInUser.getUsername());
+            model.addAttribute("email", loggedInUser.getEmail());
             model.addAttribute("upcomingEvents", upcomingEvents);
             model.addAttribute("pastEvents", pastEvents);
             return "profile";

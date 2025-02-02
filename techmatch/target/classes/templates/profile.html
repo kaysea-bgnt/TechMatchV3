@@ -49,12 +49,8 @@
     <div class="logo">
         <a href="/home" style="text-decoration: none; color: inherit;">TechMatch</a>
       </div>
-    <form id="searchForm" class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search..." class="form-control">
-        <button type="submit" style="display: none;"></button>
-    </form>
     <div class="nav-items">
-        <button class="btn btn-warning" onclick="location.href='/events/my-events'">created events</button>
+        <button class="btn btn-warning" onclick="location.href='/events/my-events'">Created Events</button>
         <button class="btn btn-warning" onclick="location.href='/create'">+ Create Event</button> <br>
         <button class="btn btn-warning" onclick="location.href='/profile'"> Profile</button> <br>
         <form action="/logout" method="post">
@@ -69,7 +65,7 @@
         <h2 class="text-center">User Profile</h2>
         <div class="user-info">
             <p><strong>USER:  <span th:text="${username}"> </strong></span></p>
-          <!-- not showing email  <p><strong>Email:</strong> <span th:text="${email}"></span></p>-->
+            <p><strong>WEBMAIL:</strong> <span th:text="${email}"></span></p>
             <!-- Add other profile details here -->
         </div>
     </div>

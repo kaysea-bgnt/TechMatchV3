@@ -85,10 +85,6 @@ public class EventService {
         return eventRepository.findByTopicsNameInAndEventType(topics, eventType);
     }
     
-
-
-
-
     public List<Event> getEventsByUserID(String userID) {
         return eventRepository.findByUserUserID(userID);
     }
@@ -98,10 +94,14 @@ public class EventService {
         eventRepository.deleteById(eventID);
     }
     
-
+    /*
     public List<Event> searchEvents(String searchQuery) {
         return eventRepository.findByEventNameContainingIgnoreCaseOrOrganizationContainingIgnoreCase(searchQuery, searchQuery);
-    }
+    } */
+
+    public List<Event> searchEvents(String searchQuery) {
+        return eventRepository.findByEventNameContainingIgnoreCaseOrOrganizationContainingIgnoreCaseOrLocationContainingIgnoreCase(searchQuery, searchQuery, searchQuery);
+     }
     
     public Event updateEvent(Event updatedEvent, MultipartFile imageFile) throws IOException {
         Event existingEvent = eventRepository.findById(updatedEvent.getEventID())
@@ -212,7 +212,7 @@ public class EventService {
         return events;
     }
 
-
+    // FILTER UPCOMING EVENTS
     public  List<Event> filterUpcomingEvents(List<Event> registeredEvents) {
         LocalDateTime now = LocalDateTime.now();
         return registeredEvents.stream()
@@ -239,24 +239,24 @@ public class EventService {
                 })
                 .collect(Collectors.toList());
     }
-
-public  List<Event> filterPastEvents(List<Event> registeredEvents) {
-        LocalDateTime now = LocalDateTime.now();
-       return registeredEvents.stream()
-                .filter(event -> {
-                     if(event == null || event.getStartDate() == null) return false;
-                     LocalDateTime eventDateTime;
-                    if (event.getStartTime() != null) {
-                       eventDateTime = LocalDateTime.of(event.getStartDate(), event.getStartTime());
-                    }else{
+    // FILTER PAST EVENTS
+    public  List<Event> filterPastEvents(List<Event> registeredEvents) {
+            LocalDateTime now = LocalDateTime.now();
+            return registeredEvents.stream()
+                    .filter(event -> {
+                        if(event == null || event.getStartDate() == null) return false;
+                            LocalDateTime eventDateTime;
+                        if (event.getStartTime() != null) {
+                            eventDateTime = LocalDateTime.of(event.getStartDate(), event.getStartTime());
+                        } else{
                         eventDateTime = LocalDateTime.of(event.getStartDate(), LocalTime.MIDNIGHT);
-                    }
-                        LocalDateTime endDateTime;
-                        if(event.getEndDate() != null){
-                            if(event.getEndTime() != null){
-                                endDateTime = LocalDateTime.of(event.getEndDate(), event.getEndTime());
-                            }else{
-                               endDateTime = LocalDateTime.of(event.getEndDate(), LocalTime.MIDNIGHT);
+                        }
+                            LocalDateTime endDateTime;
+                            if(event.getEndDate() != null){
+                                if(event.getEndTime() != null){
+                                    endDateTime = LocalDateTime.of(event.getEndDate(), event.getEndTime());
+                                }else{
+                                    endDateTime = LocalDateTime.of(event.getEndDate(), LocalTime.MIDNIGHT);
                             }
                        }
                         else{
